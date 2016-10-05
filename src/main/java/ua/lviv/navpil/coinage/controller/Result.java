@@ -1,4 +1,4 @@
-package ua.lviv.navpil.coinage.model;
+package ua.lviv.navpil.coinage.controller;
 
 public class Result {
 
@@ -13,17 +13,33 @@ public class Result {
     public static Result success(String message) {
         return new Result(Status.SUCCESS, message);
     }
+
     public static Result success() {
         return success("");
     }
+
     public static Result failure(String message) {
         return new Result(Status.FAILURE, message);
     }
+
     public static Result info(String message) {
         return new Result(Status.INFO, message);
     }
+
     public static Result endOfMove(String message) {
         return new Result(Status.END_OF_MOVE, message);
+    }
+
+    public static Result of(Status status, String message) {
+        return new Result(status, message);
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     @Override
@@ -35,7 +51,7 @@ public class Result {
     }
 
     public enum Status {
-        SUCCESS, FAILURE, INFO, END_OF_MOVE
+        SUCCESS, FAILURE, INFO, END_OF_MOVE, END_OF_GAME
     }
 
 }

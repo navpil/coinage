@@ -1,14 +1,11 @@
-package ua.lviv.navpil.coinage;
+package ua.lviv.navpil.coinage.api;
 
-import ua.lviv.navpil.coinage.model.Board;
-import ua.lviv.navpil.coinage.model.Coin;
-import ua.lviv.navpil.coinage.model.Side;
-import ua.lviv.navpil.coinage.model.Vertex;
+import ua.lviv.navpil.coinage.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TextualBoard {
+class TextualBoard {
     private final Board board;
 
     public TextualBoard(Board board) {
@@ -27,7 +24,7 @@ public class TextualBoard {
         String belongsTo = " ";
         if(!coins.isEmpty()) {
             Coin lastCoin = coins.get(coins.size() - 1);
-            if(lastCoin.getSide() == Side.HEAD) {
+            if(lastCoin.getSide() == Side.HEADS) {
                 belongsTo = "H";
             } else {
                 belongsTo = "t";

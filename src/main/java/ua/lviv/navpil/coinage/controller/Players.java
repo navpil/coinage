@@ -1,4 +1,7 @@
-package ua.lviv.navpil.coinage.model;
+package ua.lviv.navpil.coinage.controller;
+
+import ua.lviv.navpil.coinage.model.Player;
+import ua.lviv.navpil.coinage.model.Side;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,8 +14,8 @@ class Players {
     private int currentlyActive = 0;
 
     public Players() {
+        add(new Player(Side.HEADS));
         add(new Player(Side.TAILS));
-        add(new Player(Side.HEAD));
     }
 
     private void add(Player player) {

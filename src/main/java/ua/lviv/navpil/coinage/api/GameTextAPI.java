@@ -1,10 +1,10 @@
-package ua.lviv.navpil.coinage;
+package ua.lviv.navpil.coinage.api;
 
 import ua.lviv.navpil.coinage.model.CoinSize;
-import ua.lviv.navpil.coinage.model.Game;
-import ua.lviv.navpil.coinage.model.Result;
+import ua.lviv.navpil.coinage.controller.Game;
+import ua.lviv.navpil.coinage.controller.Result;
 
-public class GameTextAPI {
+class GameTextAPI {
 
     private final Game game;
 
@@ -15,8 +15,6 @@ public class GameTextAPI {
     public Result handleCommand(String c) {
         Result result = null;
         if (c.equals("slap")) {
-            //todo: move this out of the Game interface, or at least pass list of coins to the method so that it may
-            // become deterministic
             result = game.slap();
         } else if (c.equals("pass")) {
             result = game.pass();

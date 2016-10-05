@@ -50,19 +50,18 @@ public class Player {
         return allCoins;
     }
 
-    @Override
-    public String toString() {
-        return "Player{" +
-                "side=" + side +
-                '}';
-    }
-
     public void remove(Coin coin) {
         coins.get(coin.getSize()).remove(0);
     }
 
     public void add(Coin coin) {
-        coin.setSide(getSide());
-        coins.get(coin.getSize()).add(coin);
+        coins.get(coin.getSize()).add(new Coin(coin.getSize(), getSide()));
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "side=" + side +
+                '}';
     }
 }

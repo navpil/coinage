@@ -1,23 +1,31 @@
-package ua.lviv.navpil.coinage.model;
+package ua.lviv.navpil.coinage.controller;
+
+import ua.lviv.navpil.coinage.model.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Game {
+public class GameImpl implements Game {
 
+    private final CoinTosser coinTosser;
     private Players players;
     private List<Coin> coinsToUse;
     private List<Move> availableMoves;
     private Board board;
-    private Game.Stats stats = new Stats();
+    private State state = new State();
 
-    public Game() {
+    public GameImpl(CoinTosser coinTosser) {
         players = new Players();
         coinsToUse = new ArrayList<Coin>();
         availableMoves = Arrays.asList(Move.SLAP);
-        board = new Board();
+        board = new BoardImpl();
+        this.coinTosser = coinTosser;
+    }
+
+    public GameImpl() {
+        this(new RandomCoinTosser());
     }
 
     public Result slap() {
@@ -32,7 +40,7 @@ public class Game {
 
             coinsToUse = new ArrayList<Coin>();
             for (Coin coin : coinsForMove) {
-                Side side = coin.slap();
+                Side side = coinTosser.toss(coin);
                 if (side == players.getActive().getSide()) {
                     coinsToUse.add(coin);
 //                    p(coin);
@@ -102,6 +110,9 @@ public class Game {
             return Result.failure("Can't place");
         } else {
             Coin coin = getCoin(coinSize);
+            if (coin == null) {
+                return Result.failure("Don't have the coin " + coinSize);
+            }
             if (board.canPlace(coin, position)) {
                 players.getActive().remove(coin);
                 coinsToUse.remove(coin);
@@ -112,15 +123,6 @@ public class Game {
                 return Result.failure("Place is not possible");
             }
         }
-    }
-
-    private Coin getCoin(CoinSize coinSize) {
-        for (Coin coin : coinsToUse) {
-            if (coin.getSize() == coinSize) {
-                return coin;
-            }
-        }
-        return null;
     }
 
     public Result move(String from, String to) {
@@ -151,30 +153,42 @@ public class Game {
                 return Result.failure("Capture not possible");
             }
         }
-
     }
 
-    public boolean endOfGame() {
+    private Coin getCoin(CoinSize coinSize) {
+        for (Coin coin : coinsToUse) {
+            if (coin.getSize() == coinSize) {
+                return coin;
+            }
+        }
+        return null;
+    }
+
+    private boolean endOfGame() {
         return board.isFull() || players.getActive().coins().isEmpty() || players.getPassive().coins().isEmpty();
     }
 
     private Result getCorrectResult(String message) {
-        if(endOfMove()) {
+        if (endOfGame()) {
+            availableMoves.clear();
+            return Result.of(Result.Status.END_OF_GAME, message);
+        } else if (endOfMove()) {
             return Result.endOfMove(message);
         }
         return Result.success(message);
     }
 
-    public Stats stats() {
-
-        return stats;
+    //todo This method is just a workaround. What will be the better solution for giving statistics?
+    public State state() {
+        return state;
     }
 
+    //todo This method is just a workaround. What will be the better solution for providing board?
     public Board getBoard() {
         return board;
     }
 
-    public class Stats {
+    public class State {
 
         public Side getActivePlayer() {
             return players.getActive().getSide();
@@ -185,7 +199,7 @@ public class Game {
         }
 
         public Player getHeadsPlayer() {
-            return players.getPlayer(Side.HEAD);
+            return players.getPlayer(Side.HEADS);
         }
 
         public List<Move> getAvailableMoves() {
