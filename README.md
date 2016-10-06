@@ -11,3 +11,5 @@ The actual author of the game itself is Adam P. McIver
 If you are interested in supporting the game authors or would like to read more about it, please have a look at the following links:
 BGG entry: https://boardgamegeek.com/boardgame/146130/coin-age
 Kickstarter entry: https://www.kickstarter.com/projects/michaelmindes/coin-age-a-pay-what-you-want-area-control-microgam
+
+You are free to download a source code, build an application and run it.
