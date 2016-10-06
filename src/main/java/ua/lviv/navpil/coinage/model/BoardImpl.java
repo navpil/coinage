@@ -197,4 +197,10 @@ public class BoardImpl implements Board {
 
     }
 
+    @Override
+    public Iterator<Vertex> iterator() {
+        //todo: Figure out how can I return verteces.values().iterator() without creation of an ArrayList
+        //Maybe this version is fine, but how to do it anyway?
+        return new ArrayList<Vertex>(verteces.values()).iterator();
+    }
 }
