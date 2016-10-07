@@ -14,10 +14,6 @@ public class Result {
         return new Result(Status.SUCCESS, message);
     }
 
-    public static Result success() {
-        return success("");
-    }
-
     public static Result failure(String message) {
         return new Result(Status.FAILURE, message);
     }

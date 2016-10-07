@@ -41,7 +41,7 @@ public class SwingBoard extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(image, 0, 0, null);
-        for (Vertex vertex : board) {
+        for (Vertex vertex : board.getVertexes()) {
             XY point = vertexLocations.get(vertex.getName());
             for (Coin coin : vertex.getCoins()) {
                 new SwingCoin(coin).paintComponent(g.create(point.x, point.y, 100, 100));

@@ -15,6 +15,7 @@ public class GameImpl implements Game {
     private List<Move> availableMoves;
     private Board board;
     private State state = new State();
+    private Move startingMove = Move.SLAP;
 
     public GameImpl(CoinTosser coinTosser) {
         players = new Players();
@@ -66,9 +67,9 @@ public class GameImpl implements Game {
 
     public Result pass() {
         players.next().getSide();
-        availableMoves = Arrays.asList(Move.SLAP);
+        availableMoves = Arrays.asList(startingMove);
         coinsToUse = new ArrayList<Coin>();
-        return Result.success();
+        return Result.success("Passed");
     }
 
     public Result pay(CoinSize coinSize) {
@@ -118,7 +119,7 @@ public class GameImpl implements Game {
                 coinsToUse.remove(coin);
                 board.place(coin, position);
                 availableMoves.remove(Move.PLACE);
-                return Result.success();
+                return getCorrectResult("Placed");
             } else {
                 return Result.failure("Place is not possible");
             }
@@ -171,6 +172,7 @@ public class GameImpl implements Game {
     private Result getCorrectResult(String message) {
         if (endOfGame()) {
             availableMoves.clear();
+            startingMove = Move.NONE;
             return Result.of(Result.Status.END_OF_GAME, message);
         } else if (endOfMove()) {
             return Result.endOfMove(message);

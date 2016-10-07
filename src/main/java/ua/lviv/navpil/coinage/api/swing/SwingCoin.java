@@ -1,58 +1,70 @@
 package ua.lviv.navpil.coinage.api.swing;
 
 import ua.lviv.navpil.coinage.model.Coin;
+import ua.lviv.navpil.coinage.model.CoinSize;
 import ua.lviv.navpil.coinage.model.Side;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SwingCoin extends JPanel {
 
     private final Coin coin;
 
+    private final Color coinColor;
+
+    private static final Map<CoinSize, Integer> RADIUSES ;
+    static {
+        HashMap<CoinSize, Integer> m = new HashMap<CoinSize, Integer>();
+        m.put(CoinSize.QUARTER, 50);
+        m.put(CoinSize.NICKEL, 40);
+        m.put(CoinSize.PENNY, 32);
+        m.put(CoinSize.DIME, 26);
+        RADIUSES = Collections.unmodifiableMap(m);
+    }
+
     public SwingCoin(Coin coin) {
         this.coin = coin;
+        switch (coin.getSize()) {
+            case QUARTER:
+                coinColor = Color.GRAY;
+                break;
+            case NICKEL:
+                coinColor = Color.ORANGE;
+                break;
+            case PENNY:
+                coinColor = Color.BLUE;
+                break;
+            case DIME:
+            default:
+                coinColor = Color.RED;
+        }
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Color color = g.getColor();
-        Color coinColor;
-        int radius;
-        switch (coin.getSize()) {
-            case QUARTER:
-                coinColor = Color.GRAY;
-                radius = 50;
-                break;
-            case NICKEL:
-                coinColor = Color.ORANGE;
-                radius = 40;
-                break;
-            case PENNY:
-                coinColor = Color.BLUE;
-                radius = 32;
-                break;
-            case DIME:
-            default:
-                coinColor = Color.RED;
-                radius = 26;
-        }
+
+        int radius = RADIUSES.get(coin.getSize());
+
         g.setColor(coinColor);
         g.fillOval(50 - radius, 50 - radius, radius*2, radius*2);
 
         Color sideColor = Color.WHITE;
-        if(coin.getSide() == Side.HEADS) {
+        if(coin.getSide() == Side.TAILS) {
             sideColor = Color.BLACK;
         }
         g.setColor(sideColor);
 
         g.drawOval(50 - radius, 50 - radius, radius*2, radius*2);
 
-
         String coinText = "" + coin.getSize().getValue();
         g.setColor(Color.WHITE);
-        if(coin.getSide() == Side.HEADS) {
+        if(coin.getSide() == Side.TAILS) {
             coinText = parseToRoman(coin.getSize().getValue());
             g.setColor(Color.BLACK);
         }
@@ -70,6 +82,11 @@ public class SwingCoin extends JPanel {
             case 4:
                 default: return "IV";
         }
+    }
+
+    public static int radiusFor(CoinSize coinSize) {
+        Integer radius = RADIUSES.get(coinSize);
+        return radius == null ? 0 : radius;
     }
 
 }

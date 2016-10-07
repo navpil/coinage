@@ -3,7 +3,7 @@ package ua.lviv.navpil.coinage.api;
 import ua.lviv.navpil.coinage.controller.GameImpl;
 import ua.lviv.navpil.coinage.controller.Result;
 
-class TextBasedAPI {
+public class TextBasedAPI implements TextAPI {
 
     private final GameImpl game;
     private final GameTextAPI gameTextAPI;
@@ -19,7 +19,7 @@ class TextBasedAPI {
         }
 
         //GameAPI
-        Result result = gameTextAPI.handleCommand(c);
+        Result result = gameTextAPI.evaluate(c);
         if (result != null) {
             return result;
         }

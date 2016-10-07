@@ -1,6 +1,8 @@
 package ua.lviv.navpil.coinage.model;
 
-public interface Board extends Iterable<Vertex> {
+import java.util.Collection;
+
+public interface Board {
     public boolean canPlace(Coin coin, String position);
 
     public void place(Coin coin, String position);
@@ -14,6 +16,8 @@ public interface Board extends Iterable<Vertex> {
     public Coin capture(String position);
 
     public Vertex getVertex(String position);
+
+    public Collection<Vertex> getVertexes();
 
     public boolean isFull();
 

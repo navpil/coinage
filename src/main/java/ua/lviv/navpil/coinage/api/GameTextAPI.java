@@ -4,7 +4,7 @@ import ua.lviv.navpil.coinage.model.CoinSize;
 import ua.lviv.navpil.coinage.controller.Game;
 import ua.lviv.navpil.coinage.controller.Result;
 
-class GameTextAPI {
+public class GameTextAPI implements TextAPI {
 
     private final Game game;
 
@@ -12,7 +12,7 @@ class GameTextAPI {
         this.game = game;
     }
 
-    public Result handleCommand(String c) {
+    public Result evaluate(String c) {
         Result result = null;
         if (c.equals("slap")) {
             result = game.slap();

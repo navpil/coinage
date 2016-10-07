@@ -101,7 +101,7 @@ public class BoardImpl implements Board {
 
     @Override
     public boolean canCapture(String position) {
-        return possiblePositions.contains(position) && !coinsOn(position).isEmpty();
+        return possiblePositions.contains(position.toUpperCase()) && !coinsOn(position).isEmpty();
     }
 
     @Override
@@ -140,6 +140,11 @@ public class BoardImpl implements Board {
     @Override
     public Vertex getVertex(String position) {
         return vertex(position);
+    }
+
+    @Override
+    public Collection<Vertex> getVertexes() {
+        return new ArrayList<Vertex>(verteces.values());
     }
 
     @Override
@@ -197,10 +202,6 @@ public class BoardImpl implements Board {
 
     }
 
-    @Override
-    public Iterator<Vertex> iterator() {
-        //todo: Figure out how can I return verteces.values().iterator() without creation of an ArrayList
-        //Maybe this version is fine, but how to do it anyway?
-        return new ArrayList<Vertex>(verteces.values()).iterator();
-    }
+
+
 }
