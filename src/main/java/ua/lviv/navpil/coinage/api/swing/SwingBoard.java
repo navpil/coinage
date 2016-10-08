@@ -1,20 +1,31 @@
 package ua.lviv.navpil.coinage.api.swing;
 
-import ua.lviv.navpil.coinage.model.*;
+import ua.lviv.navpil.coinage.model.Board;
+import ua.lviv.navpil.coinage.model.Coin;
+import ua.lviv.navpil.coinage.model.Vertex;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.JPanel;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SwingBoard extends JPanel {
 
+    private static final int UNIT = 100;
+
     private final BufferedImage image;
     private final Board board;
     private final Map<String, XY> vertexLocations = new HashMap<String, XY>();
+    private SelectionListener listener;
+    private Collection<String> selectedItems = Collections.emptySet();
+
 
     public SwingBoard(String image, Board board) {
         this.board = board;
@@ -32,9 +43,42 @@ public class SwingBoard extends JPanel {
         try {
             this.image = ImageIO.read(SwingBoard.class.getClassLoader().getResource(image));
         } catch (IOException ex) {
-            //todo: handle it somehow differently - probably providing some textual stuff
+            //todo: handle it somehow differently - probably providing some textual stuff... do we need to handle it?
             throw new RuntimeException(ex);
         }
+
+        addMouseListener(new MouseAdapter() {
+
+            //todo: mouse click does not react on a "lazy click" - when a person clicks and moves a moouse slightly
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int x = e.getX();
+                int y = e.getY();
+
+                for (Map.Entry<String, XY> stringXYEntry : vertexLocations.entrySet()) {
+                    if (isWithin(x, y, stringXYEntry.getValue())) {
+                        if (listener != null) {
+                            listener.itemSelected(stringXYEntry.getKey());
+                        }
+                        break;
+                    }
+                }
+            }
+        });
+    }
+
+    public void setSelectionListener(SelectionListener listener) {
+        this.listener = listener;
+    }
+
+    public void setSelectedItems(Collection<String> selectedItems) {
+        this.selectedItems = selectedItems;
+        repaint();
+    }
+
+    private boolean isWithin(int x, int y, XY upLeft) {
+        //todo: this is a square calculation - the Polygon includesPoint if such function exists
+        return x >= upLeft.x && x <= (upLeft.x + UNIT) && y >= upLeft.y && y <= (upLeft.y + UNIT);
     }
 
     @Override
@@ -44,7 +88,13 @@ public class SwingBoard extends JPanel {
         for (Vertex vertex : board.getVertexes()) {
             XY point = vertexLocations.get(vertex.getName());
             for (Coin coin : vertex.getCoins()) {
-                new SwingCoin(coin).paintComponent(g.create(point.x, point.y, 100, 100));
+                //todo - should we cache/reuse the SwingCoin for performance?
+                new SwingCoin(coin).paintComponent(g.create(point.x, point.y, UNIT, UNIT));
+            }
+            if (selectedItems.contains(vertex.getName())) {
+                g.setColor(Color.CYAN);
+                ((Graphics2D) g).setStroke(new BasicStroke(2));
+                g.drawRect(point.x, point.y, UNIT, UNIT);
             }
         }
     }
@@ -66,5 +116,9 @@ public class SwingBoard extends JPanel {
         public static XY of(int x, int y) {
             return new XY(x, y);
         }
+    }
+
+    public static interface SelectionListener {
+        void itemSelected(String position);
     }
 }

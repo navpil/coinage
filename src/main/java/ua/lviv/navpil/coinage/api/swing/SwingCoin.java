@@ -4,7 +4,7 @@ import ua.lviv.navpil.coinage.model.Coin;
 import ua.lviv.navpil.coinage.model.CoinSize;
 import ua.lviv.navpil.coinage.model.Side;
 
-import javax.swing.*;
+import javax.swing.JPanel;
 import java.awt.*;
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,7 +16,8 @@ public class SwingCoin extends JPanel {
 
     private final Color coinColor;
 
-    private static final Map<CoinSize, Integer> RADIUSES ;
+    private static final Map<CoinSize, Integer> RADIUSES;
+
     static {
         HashMap<CoinSize, Integer> m = new HashMap<CoinSize, Integer>();
         m.put(CoinSize.QUARTER, 50);
@@ -52,19 +53,21 @@ public class SwingCoin extends JPanel {
         int radius = RADIUSES.get(coin.getSize());
 
         g.setColor(coinColor);
-        g.fillOval(50 - radius, 50 - radius, radius*2, radius*2);
+        g.fillOval(50 - radius, 50 - radius, radius * 2, radius * 2);
 
         Color sideColor = Color.WHITE;
-        if(coin.getSide() == Side.TAILS) {
+        if (coin.getSide() == Side.TAILS) {
             sideColor = Color.BLACK;
         }
         g.setColor(sideColor);
 
-        g.drawOval(50 - radius, 50 - radius, radius*2, radius*2);
+        ((Graphics2D) g).setStroke(new BasicStroke(3));
+        g.drawOval(50 - radius, 50 - radius, radius * 2, radius * 2);
+        ((Graphics2D) g).setStroke(new BasicStroke(1));
 
         String coinText = "" + coin.getSize().getValue();
         g.setColor(Color.WHITE);
-        if(coin.getSide() == Side.TAILS) {
+        if (coin.getSide() == Side.TAILS) {
             coinText = parseToRoman(coin.getSize().getValue());
             g.setColor(Color.BLACK);
         }
@@ -76,11 +79,15 @@ public class SwingCoin extends JPanel {
 
     private String parseToRoman(int value) {
         switch (value) {
-            case 1: return "I";
-            case 2: return "II";
-            case 3: return "III";
+            case 1:
+                return "I";
+            case 2:
+                return "II";
+            case 3:
+                return "III";
             case 4:
-                default: return "IV";
+            default:
+                return "IV";
         }
     }
 

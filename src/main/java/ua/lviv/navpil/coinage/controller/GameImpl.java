@@ -20,7 +20,7 @@ public class GameImpl implements Game {
     public GameImpl(CoinTosser coinTosser) {
         players = new Players();
         coinsToUse = new ArrayList<Coin>();
-        availableMoves = Arrays.asList(Move.SLAP);
+        availableMoves = Arrays.asList(startingMove);
         board = new BoardImpl();
         this.coinTosser = coinTosser;
     }
@@ -40,8 +40,10 @@ public class GameImpl implements Game {
 //            p("Throw coins " + coinsForMove);
 
             coinsToUse = new ArrayList<Coin>();
+            System.out.println("Coins to move: " + coinsForMove);
             for (Coin coin : coinsForMove) {
                 Side side = coinTosser.toss(coin);
+                System.out.println("Coin " + coin + " fell on side" + side);
                 if (side == players.getActive().getSide()) {
                     coinsToUse.add(coin);
 //                    p(coin);
