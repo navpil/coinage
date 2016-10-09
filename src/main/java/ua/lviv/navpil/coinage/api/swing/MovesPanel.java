@@ -1,7 +1,6 @@
 package ua.lviv.navpil.coinage.api.swing;
 
 import ua.lviv.navpil.coinage.controller.GameImpl;
-import ua.lviv.navpil.coinage.model.CoinSize;
 import ua.lviv.navpil.coinage.model.Move;
 
 import javax.swing.JButton;
@@ -12,103 +11,38 @@ import java.util.List;
 
 public class MovesPanel extends JPanel {
 
-    private final GameImpl game;
     private final JButton slap;
     private final JButton capture;
     private final JButton move;
     private final JButton pay;
     private final JButton place;
-    private MoveListener moveListener = new NoOpMoveListener();
     private final JButton pass;
 
-    public MovesPanel(final GameImpl game, final SelectedItemsController selectedItemsController) {
-        this.game = game;
+    private MoveButtonClickedListener moveButtonClickedListener = new NoOpMoveButtonClickedListener();
 
-        pass = new JButton("Pass");
-        pass.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                game.pass();
-                moveListener.moveHappened();
-            }
-        });
+    public MovesPanel() {
+        pass = createButton("Pass", Move.PASS);
+        slap = createButton("Slap", Move.SLAP);
+        capture = createButton("Capture", Move.CAPTURE);
+        move = createButton("Move", Move.MOVE);
+        pay = createButton("Pay", Move.PAY);
+        place = createButton("Place", Move.PLACE);
+
         add(pass);
-
-        slap = new JButton("Slap");
-        slap.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                game.slap();
-                moveListener.moveHappened();
-            }
-        });
         add(slap);
-
-        capture = new JButton("Capture");
-        capture.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                List<String> positions = selectedItemsController.getPositions();
-                if (!positions.isEmpty()) {
-                    game.capture(positions.get(0));
-                    moveListener.moveHappened();
-                }
-            }
-        });
         add(capture);
-
-        move = new JButton("Move");
-        move.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                List<String> positions = selectedItemsController.getPositions();
-                if (positions.size() == 2) {
-                    String from = positions.get(0);
-                    String to = positions.get(1);
-                    if (game.getBoard().getVertex(positions.get(0)).getCoins().isEmpty()) {
-                        from = positions.get(1);
-                        to = positions.get(0);
-                    }
-                    game.move(from, to);
-                    moveListener.moveHappened();
-                }
-            }
-        });
         add(move);
-
-        pay = new JButton("Pay");
-        pay.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CoinSize coinSize = selectedItemsController.getCoinSize();
-                if (coinSize != null) {
-                    game.pay(coinSize);
-                    moveListener.moveHappened();
-                }
-            }
-        });
         add(pay);
-
-        place = new JButton("Place");
-        place.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CoinSize coinSize = selectedItemsController.getCoinSize();
-                List<String> positions = selectedItemsController.getPositions();
-                if (coinSize != null && !positions.isEmpty()) {
-                    game.place(coinSize, positions.get(0));
-                    moveListener.moveHappened();
-                }
-            }
-        });
         add(place);
-
-        setCorrectStates();
     }
 
-    public void setCorrectStates() {
-        List<Move> availableMoves = game.state().getAvailableMoves();
+    private JButton createButton(String label, final Move move) {
+        JButton button = new JButton(label);
+        button.addActionListener(new MoveButtonClickedActionListener(move));
+        return button;
+    }
 
+    public void setCorrectStates(List<Move> availableMoves) {
         pass.setEnabled(!availableMoves.contains(Move.NONE));
         slap.setEnabled(availableMoves.contains(Move.SLAP));
         move.setEnabled(availableMoves.contains(Move.MOVE));
@@ -117,21 +51,35 @@ public class MovesPanel extends JPanel {
         capture.setEnabled(availableMoves.contains(Move.CAPTURE));
     }
 
-    public void setMoveListener(MoveListener moveListener) {
-        if(moveListener == null) {
-            this.moveListener = new NoOpMoveListener();
+    public void setMoveButtonClickedListener(MoveButtonClickedListener moveButtonClickedListener) {
+        if(moveButtonClickedListener == null) {
+            this.moveButtonClickedListener = new NoOpMoveButtonClickedListener();
         } else {
-            this.moveListener = moveListener;
+            this.moveButtonClickedListener = moveButtonClickedListener;
         }
     }
 
-    public static interface MoveListener {
-        void moveHappened();
+    public static interface MoveButtonClickedListener {
+        void buttonClicked(Move move);
     }
 
-    public static class NoOpMoveListener implements MoveListener {
+    public static class NoOpMoveButtonClickedListener implements MoveButtonClickedListener {
         @Override
-        public void moveHappened() {
+        public void buttonClicked(Move move) {
+        }
+    }
+
+    private class MoveButtonClickedActionListener implements ActionListener {
+
+        private final Move move;
+
+        private MoveButtonClickedActionListener(Move move) {
+            this.move = move;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            moveButtonClickedListener.buttonClicked(move);
         }
     }
 }
