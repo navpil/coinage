@@ -88,7 +88,7 @@ public class SwingBoard extends JPanel {
         for (Vertex vertex : board.getVertexes()) {
             XY point = vertexLocations.get(vertex.getName());
             for (Coin coin : vertex.getCoins()) {
-                //todo - should we cache/reuse the SwingCoin for performance?
+                //todo - should we cache/reuse the SwingCoin for performance? - try it and check with profiler
                 new SwingCoin(coin).paintComponent(g.create(point.x, point.y, UNIT, UNIT));
             }
             if (selectedItems.contains(vertex.getName())) {
