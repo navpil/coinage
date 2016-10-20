@@ -28,7 +28,7 @@ public class SwingPlayer extends JPanel {
         Color oldColor = g.getColor();
 
         if (isActive()) {
-            g.setColor(Color.YELLOW);
+            g.setColor(Color.GREEN);
             g.fillRect(0, 0, 130, 400);
         }
 
