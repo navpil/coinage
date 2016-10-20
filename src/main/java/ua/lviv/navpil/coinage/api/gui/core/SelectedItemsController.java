@@ -1,11 +1,11 @@
-package ua.lviv.navpil.coinage.api.swing;
+package ua.lviv.navpil.coinage.api.gui.core;
 
 import ua.lviv.navpil.coinage.model.Coin;
 import ua.lviv.navpil.coinage.model.CoinSize;
 
 import java.util.*;
 
-public class SelectedItemsController {
+class SelectedItemsController {
 
     private Queue<SelectedItem> selectedItems = new LinkedList<SelectedItem>();
 

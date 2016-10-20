@@ -2,10 +2,7 @@ package ua.lviv.navpil.coinage.controller;
 
 import ua.lviv.navpil.coinage.model.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class GameImpl implements Game {
 
@@ -99,13 +96,7 @@ public class GameImpl implements Game {
     }
 
     private boolean endOfMove() {
-        if (availableMoves.isEmpty()) {
-            players.next().getSide();
-            availableMoves = Arrays.asList(Move.SLAP);
-            coinsToUse = new ArrayList<Coin>();
-            return true;
-        }
-        return false;
+        return availableMoves.isEmpty();
     }
 
     public Result place(CoinSize coinSize, String position) {
@@ -206,7 +197,7 @@ public class GameImpl implements Game {
             return players.getPlayer(Side.HEADS);
         }
 
-        public List<Move> getAvailableMoves() {
+        public Collection<Move> getAvailableMoves() {
             return Collections.unmodifiableList(availableMoves);
         }
 

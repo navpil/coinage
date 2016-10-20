@@ -1,4 +1,4 @@
-package ua.lviv.navpil.coinage.api.swing;
+package ua.lviv.navpil.coinage.api.gui.swing;
 
 import ua.lviv.navpil.coinage.model.Coin;
 import ua.lviv.navpil.coinage.model.CoinSize;
@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SwingCoin extends JPanel {
+class SwingCoin extends JPanel {
 
     private final Coin coin;
 
