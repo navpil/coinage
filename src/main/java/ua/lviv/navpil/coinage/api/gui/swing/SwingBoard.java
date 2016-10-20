@@ -1,5 +1,6 @@
-package ua.lviv.navpil.coinage.api.swing;
+package ua.lviv.navpil.coinage.api.gui.swing;
 
+import ua.lviv.navpil.coinage.api.gui.core.ItemSelectionListener;
 import ua.lviv.navpil.coinage.model.Board;
 import ua.lviv.navpil.coinage.model.Coin;
 import ua.lviv.navpil.coinage.model.Vertex;
@@ -16,14 +17,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SwingBoard extends JPanel {
+class SwingBoard extends JPanel {
 
     private static final int UNIT = 100;
 
     private final BufferedImage image;
     private final Board board;
     private final Map<String, XY> vertexLocations = new HashMap<String, XY>();
-    private SelectionListener listener;
+    private ItemSelectionListener listener;
     private Collection<String> selectedItems = Collections.emptySet();
 
 
@@ -58,7 +59,7 @@ public class SwingBoard extends JPanel {
                 for (Map.Entry<String, XY> stringXYEntry : vertexLocations.entrySet()) {
                     if (isWithin(x, y, stringXYEntry.getValue())) {
                         if (listener != null) {
-                            listener.itemSelected(stringXYEntry.getKey());
+                            listener.positionSelected(stringXYEntry.getKey());
                         }
                         break;
                     }
@@ -67,13 +68,12 @@ public class SwingBoard extends JPanel {
         });
     }
 
-    public void setSelectionListener(SelectionListener listener) {
+    public void setSelectionListener(ItemSelectionListener listener) {
         this.listener = listener;
     }
 
-    public void setSelectedItems(Collection<String> selectedItems) {
+    public void setSelectedPositions(Collection<String> selectedItems) {
         this.selectedItems = selectedItems;
-        repaint();
     }
 
     private boolean isWithin(int x, int y, XY upLeft) {
@@ -118,7 +118,4 @@ public class SwingBoard extends JPanel {
         }
     }
 
-    public static interface SelectionListener {
-        void itemSelected(String position);
-    }
 }

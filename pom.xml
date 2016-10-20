@@ -6,7 +6,7 @@
 
     <groupId>coinage</groupId>
     <artifactId>coinage</artifactId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
@@ -23,9 +23,10 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3.1</version>
                 <configuration>
+                    <finalName>coinage</finalName>
                     <archive>
                         <manifest>
-                            <mainClass>ua.lviv.navpil.coinage.api.swing.SwingAPI</mainClass>
+                            <mainClass>ua.lviv.navpil.coinage.api.gui.SwingAPI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

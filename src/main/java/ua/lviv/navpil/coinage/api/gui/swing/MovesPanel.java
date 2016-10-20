@@ -1,15 +1,16 @@
-package ua.lviv.navpil.coinage.api.swing;
+package ua.lviv.navpil.coinage.api.gui.swing;
 
-import ua.lviv.navpil.coinage.controller.GameImpl;
+import ua.lviv.navpil.coinage.api.gui.core.MoveAttemptListener;
 import ua.lviv.navpil.coinage.model.Move;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 import java.util.List;
 
-public class MovesPanel extends JPanel {
+class MovesPanel extends JPanel {
 
     private final JButton slap;
     private final JButton capture;
@@ -18,7 +19,7 @@ public class MovesPanel extends JPanel {
     private final JButton place;
     private final JButton pass;
 
-    private MoveButtonClickedListener moveButtonClickedListener = new NoOpMoveButtonClickedListener();
+    private MoveAttemptListener moveButtonClickedListener = new NoOpMoveButtonClickedListener();
 
     public MovesPanel() {
         pass = createButton("Pass", Move.PASS);
@@ -42,7 +43,7 @@ public class MovesPanel extends JPanel {
         return button;
     }
 
-    public void setCorrectStates(List<Move> availableMoves) {
+    public void setCorrectStatesForMoves(Collection<Move> availableMoves) {
         pass.setEnabled(!availableMoves.contains(Move.NONE));
         slap.setEnabled(availableMoves.contains(Move.SLAP));
         move.setEnabled(availableMoves.contains(Move.MOVE));
@@ -51,21 +52,17 @@ public class MovesPanel extends JPanel {
         capture.setEnabled(availableMoves.contains(Move.CAPTURE));
     }
 
-    public void setMoveButtonClickedListener(MoveButtonClickedListener moveButtonClickedListener) {
-        if(moveButtonClickedListener == null) {
+    public void setMoveButtonClickedListener(MoveAttemptListener moveButtonClickedListener) {
+        if (moveButtonClickedListener == null) {
             this.moveButtonClickedListener = new NoOpMoveButtonClickedListener();
         } else {
             this.moveButtonClickedListener = moveButtonClickedListener;
         }
     }
 
-    public static interface MoveButtonClickedListener {
-        void buttonClicked(Move move);
-    }
-
-    public static class NoOpMoveButtonClickedListener implements MoveButtonClickedListener {
+    public static class NoOpMoveButtonClickedListener implements MoveAttemptListener {
         @Override
-        public void buttonClicked(Move move) {
+        public void moveAttempted(Move move) {
         }
     }
 
@@ -79,7 +76,7 @@ public class MovesPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            moveButtonClickedListener.buttonClicked(move);
+            moveButtonClickedListener.moveAttempted(move);
         }
     }
 }
