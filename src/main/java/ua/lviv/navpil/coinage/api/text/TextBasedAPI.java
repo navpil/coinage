@@ -1,7 +1,9 @@
 package ua.lviv.navpil.coinage.api.text;
 
 import ua.lviv.navpil.coinage.controller.GameImpl;
+import ua.lviv.navpil.coinage.controller.GameState;
 import ua.lviv.navpil.coinage.controller.Result;
+import ua.lviv.navpil.coinage.model.Side;
 
 public class TextBasedAPI implements TextAPI {
 
@@ -35,17 +37,17 @@ public class TextBasedAPI implements TextAPI {
         Result info = null;
         //Info API
         if (c.equals("coins")) {
-            info = Result.info("Available coins: " + game.state().getAvailableCoins());
+            info = Result.info("Available coins: " + game.getState().getAvailableCoins());
         } else if (c.equals("moves")) {
-            info = Result.info("Available moves: " + game.state().getAvailableMoves());
+            info = Result.info("Available moves: " + game.getState().getAvailableMoves());
         } else if (c.equals("active")) {
-            info = Result.info("Currently active player: " + game.state().getActivePlayer());
+            info = Result.info("Currently active player: " + game.getState().getActivePlayer());
         } else if (c.equals("board")) {
-            info = Result.info(new TextualBoard(game.getBoard()).toString());
+            info = Result.info(new TextualBoard(game.getState().getVertexes()).toString());
         } else if (c.equals("players")) {
-            GameImpl.State state = game.state();
-            info = Result.info("Heads: " + state.getHeadsPlayer() + ": " + state.getHeadsPlayer().coins() + "\n" +
-            "Tails: " + state.getTailsPlayer() + ": " + state.getTailsPlayer().coins());
+            GameState state = game.getState();
+            info = Result.info("Heads: " + state.getCoins(Side.HEADS) + "\n" +
+            "Tails: " + state.getCoins(Side.TAILS));
         }
         else if (c.equals("help")) {
             //show some help

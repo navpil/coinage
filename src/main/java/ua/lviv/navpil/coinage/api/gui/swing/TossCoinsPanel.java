@@ -2,6 +2,7 @@ package ua.lviv.navpil.coinage.api.gui.swing;
 
 import ua.lviv.navpil.coinage.api.gui.core.ItemSelectionListener;
 import ua.lviv.navpil.coinage.controller.GameImpl;
+import ua.lviv.navpil.coinage.controller.GameState;
 import ua.lviv.navpil.coinage.model.Coin;
 import ua.lviv.navpil.coinage.model.CoinSize;
 
@@ -15,11 +16,11 @@ class TossCoinsPanel extends JPanel {
 
     private static final int UNIT = 100;
 
-    private final GameImpl.State state;
+    private final GameState state;
     private CoinSize selectedSize;
     private ItemSelectionListener listener;
 
-    public TossCoinsPanel(final GameImpl.State state) {
+    public TossCoinsPanel(final GameState state) {
         this.state = state;
         addMouseListener(new MouseAdapter() {
             @Override
