@@ -11,6 +11,5 @@ public class SwingAPI {
     public static void main(String[] args) throws IOException {
         SwingGUI gui = new SwingGUI();
         new GUIController(gui, new GameImpl());
-        gui.endOfGame();
     }
 }
