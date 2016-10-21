@@ -13,7 +13,6 @@ public class GameImpl implements Game {
     private List<Coin> coinsToUse;
     private List<Move> availableMoves;
     private Board board;
-    private State state = new State();
     private Move startingMove = Move.SLAP;
 
     public GameImpl(CoinTosser coinTosser) {
