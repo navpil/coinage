@@ -1,4 +1,4 @@
-package ua.lviv.navpil.coinage.api.swing;
+package ua.lviv.navpil.coinage.api.gui.swing;
 
 import ua.lviv.navpil.coinage.controller.GameImpl;
 import ua.lviv.navpil.coinage.model.Coin;
@@ -7,12 +7,15 @@ import ua.lviv.navpil.coinage.model.Player;
 import ua.lviv.navpil.coinage.model.Side;
 
 import javax.swing.JPanel;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class SwingPlayer extends JPanel {
+class SwingPlayer extends JPanel {
 
     private final Player player;
     private final GameImpl.State state;

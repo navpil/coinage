@@ -13,6 +13,7 @@ public class GameImpl implements Game {
     private List<Coin> coinsToUse;
     private List<Move> availableMoves;
     private Board board;
+    private State state = new State();
     private Move startingMove = Move.SLAP;
 
     public GameImpl(CoinTosser coinTosser) {
@@ -127,10 +128,10 @@ public class GameImpl implements Game {
     }
 
     public Result move(String from, String to) {
-        if (!availableMoves.contains(Move.MOVE)) {
+        if(!availableMoves.contains(Move.MOVE)) {
             return Result.failure("Can't move");
         } else {
-            if (board.canMove(from, to)) {
+            if(board.canMove(from, to)) {
                 board.move(from, to);
                 availableMoves.remove(Move.MOVE);
                 return getCorrectResult("Moved");
@@ -142,10 +143,10 @@ public class GameImpl implements Game {
     }
 
     public Result capture(String pos) {
-        if (!availableMoves.contains(Move.CAPTURE)) {
+        if(!availableMoves.contains(Move.CAPTURE)) {
             return Result.failure("Can't capture");
         } else {
-            if (board.canCapture(pos)) {
+            if(board.canCapture(pos)) {
                 Coin captured = board.capture(pos);
                 players.getActive().add(captured);
                 availableMoves.remove(Move.CAPTURE);

@@ -1,6 +1,7 @@
-package ua.lviv.navpil.coinage.api;
+package ua.lviv.navpil.coinage.api.text;
 
 import org.junit.Test;
+import ua.lviv.navpil.coinage.api.text.TextualBoard;
 import ua.lviv.navpil.coinage.model.*;
 
 public class TextualBoardTest {

@@ -1,4 +1,4 @@
-package ua.lviv.navpil.coinage.api;
+package ua.lviv.navpil.coinage.api.text;
 
 import ua.lviv.navpil.coinage.model.*;
 
