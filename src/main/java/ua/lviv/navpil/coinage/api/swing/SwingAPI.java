@@ -24,9 +24,9 @@ public class SwingAPI {
 
         final GameImpl game = new GameImpl();
 
-        infoPanel.add(new SwingPlayer(game.state().getHeadsPlayer(), game.state()));
+        infoPanel.add(new SwingPlayer(game.getHeadsPlayer(), game.getState()));
         final SwingBoard swingBoard = new SwingBoard("coinage_map_medium.png", game.getBoard());
-        final TossCoinsPanel tossCoinsPanel = new TossCoinsPanel(game.state());
+        final TossCoinsPanel tossCoinsPanel = new TossCoinsPanel(game.getState());
 
         final SelectedItemsController selectedItemsController = new SelectedItemsController();
         swingBoard.setSelectionListener(new SwingBoard.SelectionListener() {
@@ -38,14 +38,14 @@ public class SwingAPI {
             }
         });
         infoPanel.add(swingBoard);
-        infoPanel.add(new SwingPlayer(game.state().getTailsPlayer(), game.state()));
+        infoPanel.add(new SwingPlayer(game.getState().getTailsPlayer(), game.getState()));
 
         panel.add(infoPanel);
 
         tossCoinsPanel.setSelectionListener(new TossCoinsPanel.SelectionListener() {
             @Override
             public void itemSelected(Coin coin) {
-                if (coin.getSide() == game.state().getActivePlayer()) {
+                if (coin.getSide() == game.getState().getActivePlayer()) {
                     selectedItemsController.addCoin(coin);
                     swingBoard.setSelectedItems(selectedItemsController.getPositions());
                     tossCoinsPanel.setSelectedSize(selectedItemsController.getCoinSize());

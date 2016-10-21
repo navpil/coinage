@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 import java.util.List;
 
 public class MovesPanel extends JPanel {
@@ -65,7 +66,7 @@ public class MovesPanel extends JPanel {
                 if (positions.size() == 2) {
                     String from = positions.get(0);
                     String to = positions.get(1);
-                    if (game.getBoard().getVertex(positions.get(0)).getCoins().isEmpty()) {
+                    if (game.getState().getBoardCoins().get(positions.get(0)).isEmpty()) {
                         from = positions.get(1);
                         to = positions.get(0);
                     }
@@ -107,7 +108,7 @@ public class MovesPanel extends JPanel {
     }
 
     public void setCorrectStates() {
-        List<Move> availableMoves = game.state().getAvailableMoves();
+        Collection<Move> availableMoves = game.getState().getAvailableMoves();
 
         pass.setEnabled(!availableMoves.contains(Move.NONE));
         slap.setEnabled(availableMoves.contains(Move.SLAP));

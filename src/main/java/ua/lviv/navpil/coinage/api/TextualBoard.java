@@ -4,11 +4,12 @@ import ua.lviv.navpil.coinage.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 class TextualBoard {
-    private final Board board;
+    private final Map<String, Vertex> board;
 
-    public TextualBoard(Board board) {
+    public TextualBoard(Map<String, Vertex> board) {
         this.board = board;
     }
 
@@ -58,7 +59,7 @@ class TextualBoard {
     private void fill(StringBuilder sb, String str, String... vertexNames) {
         List<String[]> renders = new ArrayList<String[]>();
         for(String s : vertexNames) {
-            renders.add(vertex(board.getVertex(s)));
+            renders.add(vertex(board.get(s)));
         }
 
         for(int i = 0; i < renders.get(0).length; i++) {
