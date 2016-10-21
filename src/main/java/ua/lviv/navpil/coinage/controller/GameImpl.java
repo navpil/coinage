@@ -4,7 +4,6 @@ import ua.lviv.navpil.coinage.model.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class GameImpl implements Game {
@@ -14,7 +13,6 @@ public class GameImpl implements Game {
     private List<Coin> coinsToUse;
     private List<Move> availableMoves;
     private Board board;
-    private State state = new State();
     private Move startingMove = Move.SLAP;
 
     public GameImpl(CoinTosser coinTosser) {
@@ -129,10 +127,10 @@ public class GameImpl implements Game {
     }
 
     public Result move(String from, String to) {
-        if(!availableMoves.contains(Move.MOVE)) {
+        if (!availableMoves.contains(Move.MOVE)) {
             return Result.failure("Can't move");
         } else {
-            if(board.canMove(from, to)) {
+            if (board.canMove(from, to)) {
                 board.move(from, to);
                 availableMoves.remove(Move.MOVE);
                 return getCorrectResult("Moved");
@@ -144,10 +142,10 @@ public class GameImpl implements Game {
     }
 
     public Result capture(String pos) {
-        if(!availableMoves.contains(Move.CAPTURE)) {
+        if (!availableMoves.contains(Move.CAPTURE)) {
             return Result.failure("Can't capture");
         } else {
-            if(board.canCapture(pos)) {
+            if (board.canCapture(pos)) {
                 Coin captured = board.capture(pos);
                 players.getActive().add(captured);
                 availableMoves.remove(Move.CAPTURE);
@@ -182,40 +180,21 @@ public class GameImpl implements Game {
         return Result.success(message);
     }
 
-    //todo This method is just a workaround. What will be the better solution for giving statistics?
-    public State state() {
-        return state;
+    @Override
+    public GameState getState() {
+        return new GameStateImpl(
+                players.getPlayer(Side.HEADS).coins(),
+                players.getPlayer(Side.TAILS).coins(),
+                players.getActive().getSide(),
+                coinsToUse,
+                board,
+                availableMoves,
+                getPoints(Side.HEADS),
+                getPoints(Side.TAILS)
+        );
     }
 
-    //todo This method is just a workaround. What will be the better solution for providing board?
-    public Board getBoard() {
-        return board;
-    }
-
-    public class State {
-
-        public Side getActivePlayer() {
-            return players.getActive().getSide();
-        }
-
-        public Player getTailsPlayer() {
-            return players.getPlayer(Side.TAILS);
-        }
-
-        public Player getHeadsPlayer() {
-            return players.getPlayer(Side.HEADS);
-        }
-
-        public List<Move> getAvailableMoves() {
-            return Collections.unmodifiableList(availableMoves);
-        }
-
-        public List<Coin> getAvailableCoins() {
-            return Collections.unmodifiableList(coinsToUse);
-        }
-
-        public int getPoints(Side side) {
-            return board.calculate(side) + players.getPlayer(side).coins().size();
-        }
+    private int getPoints(Side side) {
+        return board.calculate(side) + players.getPlayer(side).coins().size();
     }
 }
