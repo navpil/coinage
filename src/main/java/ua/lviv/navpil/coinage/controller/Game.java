@@ -2,11 +2,6 @@ package ua.lviv.navpil.coinage.controller;
 
 import ua.lviv.navpil.coinage.model.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 public interface Game {
 
     public Result slap();
@@ -20,5 +15,7 @@ public interface Game {
     public Result move(String from, String to);
 
     public Result capture(String pos);
+
+    public GameState getState();
 
 }

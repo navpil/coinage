@@ -1,6 +1,6 @@
 package ua.lviv.navpil.coinage.model;
 
-public class Coin {
+public class Coin implements Comparable<Coin> {
     private final CoinSize coinSize;
     private final Side side;
 
@@ -45,5 +45,20 @@ public class Coin {
     public String toString() {
         String s = "" + coinSize.name().charAt(0);
         return side == Side.HEADS ? s.toUpperCase() : s.toLowerCase();
+    }
+
+    @Override
+    public int compareTo(Coin o) {
+        if (this.coinSize.gt(o.coinSize)) {
+            return 1;
+        } else if (o.coinSize.gt(this.coinSize)) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
+    public Coin flipped() {
+        return new Coin(coinSize, side.flip());
     }
 }

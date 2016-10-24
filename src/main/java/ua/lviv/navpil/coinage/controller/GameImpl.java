@@ -2,16 +2,19 @@ package ua.lviv.navpil.coinage.controller;
 
 import ua.lviv.navpil.coinage.model.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 public class GameImpl implements Game {
 
     private final CoinTosser coinTosser;
     private Players players;
     private List<Coin> coinsToUse;
+    private List<Coin> unusableCoins;
     private List<Move> availableMoves;
     private Board board;
-    private State state = new State();
     private Move startingMove = Move.SLAP;
 
     public GameImpl(CoinTosser coinTosser) {
@@ -37,6 +40,7 @@ public class GameImpl implements Game {
 //            p("Throw coins " + coinsForMove);
 
             coinsToUse = new ArrayList<Coin>();
+            unusableCoins = new ArrayList<Coin>();
             System.out.println("Coins to move: " + coinsForMove);
             for (Coin coin : coinsForMove) {
                 Side side = coinTosser.toss(coin);
@@ -44,6 +48,8 @@ public class GameImpl implements Game {
                 if (side == players.getActive().getSide()) {
                     coinsToUse.add(coin);
 //                    p(coin);
+                } else {
+                    unusableCoins.add(coin.flipped());
                 }
             }
             if (coinsToUse.size() == 4) {
@@ -96,7 +102,13 @@ public class GameImpl implements Game {
     }
 
     private boolean endOfMove() {
-        return availableMoves.isEmpty();
+        if (availableMoves.isEmpty()) {
+            players.next().getSide();
+            availableMoves = Arrays.asList(Move.SLAP);
+            coinsToUse = new ArrayList<Coin>();
+            return true;
+        }
+        return false;
     }
 
     public Result place(CoinSize coinSize, String position) {
@@ -173,40 +185,29 @@ public class GameImpl implements Game {
         return Result.success(message);
     }
 
-    //todo This method is just a workaround. What will be the better solution for giving statistics?
-    public State state() {
-        return state;
+    @Override
+    public GameState getState() {
+        return new GameStateImpl(
+                players.getPlayer(Side.HEADS).coins(),
+                players.getPlayer(Side.TAILS).coins(),
+                players.getActive().getSide(),
+                combine(coinsToUse, unusableCoins),
+                board,
+                availableMoves,
+                getPoints(Side.HEADS),
+                getPoints(Side.TAILS)
+        );
     }
 
-    //todo This method is just a workaround. What will be the better solution for providing board?
-    public Board getBoard() {
-        return board;
+    private <T> Collection<T> combine(Collection<T> ... collections) {
+        ArrayList<T> result = new ArrayList<T>();
+        for (Collection<T> collection : collections) {
+            result.addAll(collection);
+        }
+        return result;
     }
 
-    public class State {
-
-        public Side getActivePlayer() {
-            return players.getActive().getSide();
-        }
-
-        public Player getTailsPlayer() {
-            return players.getPlayer(Side.TAILS);
-        }
-
-        public Player getHeadsPlayer() {
-            return players.getPlayer(Side.HEADS);
-        }
-
-        public Collection<Move> getAvailableMoves() {
-            return Collections.unmodifiableList(availableMoves);
-        }
-
-        public List<Coin> getAvailableCoins() {
-            return Collections.unmodifiableList(coinsToUse);
-        }
-
-        public int getPoints(Side side) {
-            return board.calculate(side) + players.getPlayer(side).coins().size();
-        }
+    private int getPoints(Side side) {
+        return board.calculate(side) + players.getPlayer(side).coins().size();
     }
 }

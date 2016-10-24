@@ -1,8 +1,7 @@
 package ua.lviv.navpil.coinage.api.gui.core;
 
-import ua.lviv.navpil.coinage.controller.GameImpl;
+import ua.lviv.navpil.coinage.controller.GameState;
 import ua.lviv.navpil.coinage.model.CoinSize;
-import ua.lviv.navpil.coinage.model.Move;
 
 import java.util.Collection;
 
@@ -12,11 +11,11 @@ import java.util.Collection;
 public interface GUI {
 
     /**
-     * Initialize the UI with the game instance. Used instead of constructor
+     * Update the state whenever anything chages
      *
-     * @param game game to instantiate with
+     * @param state state
      */
-    void init(GameImpl game);
+    void updateState(GameState state);
 
     /**
      * Sets the selection listener. Selection listener listens for selected positions on board or coins to be used
@@ -45,13 +44,6 @@ public interface GUI {
      * @param coinSize selected coin identified by size
      */
     void setSelectedCoinSize(CoinSize coinSize);
-
-    /**
-     * Sets the available moves user can legally do
-     *
-     * @param availableMoves collection of available moves
-     */
-    void setAvailableMoves(Collection<Move> availableMoves);
 
     /**
      * Whenever end of game happens this method is called
