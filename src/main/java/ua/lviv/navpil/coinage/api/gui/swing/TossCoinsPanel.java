@@ -1,8 +1,6 @@
 package ua.lviv.navpil.coinage.api.gui.swing;
 
 import ua.lviv.navpil.coinage.api.gui.core.ItemSelectionListener;
-import ua.lviv.navpil.coinage.controller.GameImpl;
-import ua.lviv.navpil.coinage.controller.GameState;
 import ua.lviv.navpil.coinage.model.Coin;
 import ua.lviv.navpil.coinage.model.CoinSize;
 
@@ -16,20 +14,18 @@ class TossCoinsPanel extends JPanel {
 
     private static final int UNIT = 100;
 
-    private final GameState state;
     private CoinSize selectedSize;
     private ItemSelectionListener listener;
+    private List<Coin> coins;
 
-    public TossCoinsPanel(final GameState state) {
-        this.state = state;
+    public TossCoinsPanel() {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getY() <= 100) {
                     int index = e.getX() / 100;
-                    List<Coin> availableCoins = state.getAvailableCoins();
-                    if (index < availableCoins.size()) {
-                        listener.coinSelected(availableCoins.get(index));
+                    if (index < coins.size()) {
+                        listener.coinSelected(coins.get(index));
                     }
                 }
             }
@@ -42,14 +38,17 @@ class TossCoinsPanel extends JPanel {
 
     public void setSelectedCoinSize(CoinSize coinSize) {
         this.selectedSize = coinSize;
-        repaint();
+    }
+
+    public void setSlappedCoins(List<Coin> coins) {
+        this.coins = coins;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         int x = 0;
-        for (Coin availableCoin : state.getAvailableCoins()) {
+        for (Coin availableCoin : coins) {
             new SwingCoin(availableCoin).paintComponent(g.create(x, 0, UNIT, UNIT));
             if (availableCoin.getSize() == selectedSize) {
                 g.setColor(Color.CYAN);

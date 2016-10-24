@@ -4,6 +4,7 @@ import ua.lviv.navpil.coinage.model.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class GameImpl implements Game {
@@ -11,6 +12,7 @@ public class GameImpl implements Game {
     private final CoinTosser coinTosser;
     private Players players;
     private List<Coin> coinsToUse;
+    private List<Coin> unusableCoins;
     private List<Move> availableMoves;
     private Board board;
     private Move startingMove = Move.SLAP;
@@ -38,6 +40,7 @@ public class GameImpl implements Game {
 //            p("Throw coins " + coinsForMove);
 
             coinsToUse = new ArrayList<Coin>();
+            unusableCoins = new ArrayList<Coin>();
             System.out.println("Coins to move: " + coinsForMove);
             for (Coin coin : coinsForMove) {
                 Side side = coinTosser.toss(coin);
@@ -45,6 +48,8 @@ public class GameImpl implements Game {
                 if (side == players.getActive().getSide()) {
                     coinsToUse.add(coin);
 //                    p(coin);
+                } else {
+                    unusableCoins.add(coin.flipped());
                 }
             }
             if (coinsToUse.size() == 4) {
@@ -186,12 +191,20 @@ public class GameImpl implements Game {
                 players.getPlayer(Side.HEADS).coins(),
                 players.getPlayer(Side.TAILS).coins(),
                 players.getActive().getSide(),
-                coinsToUse,
+                combine(coinsToUse, unusableCoins),
                 board,
                 availableMoves,
                 getPoints(Side.HEADS),
                 getPoints(Side.TAILS)
         );
+    }
+
+    private <T> Collection<T> combine(Collection<T> ... collections) {
+        ArrayList<T> result = new ArrayList<T>();
+        for (Collection<T> collection : collections) {
+            result.addAll(collection);
+        }
+        return result;
     }
 
     private int getPoints(Side side) {

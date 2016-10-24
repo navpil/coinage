@@ -1,16 +1,21 @@
 package ua.lviv.navpil.coinage.api.text;
 
-import ua.lviv.navpil.coinage.controller.GameImpl;
+import ua.lviv.navpil.coinage.controller.Game;
 import ua.lviv.navpil.coinage.controller.GameState;
 import ua.lviv.navpil.coinage.controller.Result;
+import ua.lviv.navpil.coinage.model.Coin;
 import ua.lviv.navpil.coinage.model.Side;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class TextBasedAPI implements TextAPI {
 
-    private final GameImpl game;
+    private final Game game;
     private final GameTextAPI gameTextAPI;
 
-    public TextBasedAPI(GameImpl game) {
+    public TextBasedAPI(Game game) {
         this.game = game;
         gameTextAPI = new GameTextAPI(game);
     }
@@ -37,7 +42,7 @@ public class TextBasedAPI implements TextAPI {
         Result info = null;
         //Info API
         if (c.equals("coins")) {
-            info = Result.info("Available coins: " + game.getState().getAvailableCoins());
+            info = Result.info("Available coins: " + availableCoins());
         } else if (c.equals("moves")) {
             info = Result.info("Available moves: " + game.getState().getAvailableMoves());
         } else if (c.equals("active")) {
@@ -47,9 +52,8 @@ public class TextBasedAPI implements TextAPI {
         } else if (c.equals("players")) {
             GameState state = game.getState();
             info = Result.info("Heads: " + state.getCoins(Side.HEADS) + "\n" +
-            "Tails: " + state.getCoins(Side.TAILS));
-        }
-        else if (c.equals("help")) {
+                    "Tails: " + state.getCoins(Side.TAILS));
+        } else if (c.equals("help")) {
             //show some help
         } else if (c.equals("undo")) {
             //todo - this functionality is still not in place. Not the highest priority for now
@@ -58,6 +62,18 @@ public class TextBasedAPI implements TextAPI {
             //that is: pay, place, move, capture
         }
         return info;
+    }
+
+    private ArrayList<Coin> availableCoins() {
+        ArrayList<Coin> availableCoins = new ArrayList<Coin>();
+        Collection<Coin> slappedCoins = game.getState().getSlappedCoins();
+        for (Coin coin : slappedCoins) {
+            if (coin.getSide() == game.getState().getActivePlayer()) {
+                availableCoins.add(coin);
+            }
+        }
+        Collections.sort(availableCoins);
+        return availableCoins;
     }
 
 

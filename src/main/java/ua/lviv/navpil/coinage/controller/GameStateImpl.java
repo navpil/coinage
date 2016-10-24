@@ -17,7 +17,6 @@ class GameStateImpl implements GameState {
     private final Collection<Move> availableMoves;
     private final int headsPoints;
     private final int tailsPoints;
-    private final List<Coin> availableCoins;
 
     public GameStateImpl(Collection<Coin> headsCoin, Collection<Coin> tailsCoin, Side activePlayer,
                          Collection<Coin> slappedCoins, Board board,
@@ -34,14 +33,6 @@ class GameStateImpl implements GameState {
         this.availableMoves = Collections.unmodifiableSet(new HashSet<Move>(availableMoves));
         this.headsPoints = headsPoints;
         this.tailsPoints = tailsPoints;
-        List<Coin> availableCoins = new ArrayList<Coin>();
-        for (Coin slappedCoin : slappedCoins) {
-            if (slappedCoin.getSide() == activePlayer) {
-                availableCoins.add(slappedCoin);
-            }
-        }
-        this.availableCoins = Collections.unmodifiableList(availableCoins);
-
     }
 
     private List<Coin> immutableList(Collection<Coin> headsCoin) {
@@ -65,11 +56,6 @@ class GameStateImpl implements GameState {
     @Override
     public List<Coin> getSlappedCoins() {
         return slappedCoins;
-    }
-
-    @Override
-    public List<Coin> getAvailableCoins() {
-        return availableCoins;
     }
 
     @Override
