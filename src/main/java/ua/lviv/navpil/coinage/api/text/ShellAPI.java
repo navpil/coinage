@@ -1,6 +1,7 @@
 package ua.lviv.navpil.coinage.api.text;
 
-import ua.lviv.navpil.coinage.controller.GameImpl;
+import ua.lviv.navpil.coinage.controller.Game;
+import ua.lviv.navpil.coinage.controller.GameState;
 import ua.lviv.navpil.coinage.controller.Result;
 import ua.lviv.navpil.coinage.model.Move;
 import ua.lviv.navpil.coinage.model.Side;
@@ -11,9 +12,9 @@ import java.io.InputStreamReader;
 
 public class ShellAPI {
 
-    private final GameImpl game;
+    private final Game game;
 
-    public ShellAPI(GameImpl game) {
+    public ShellAPI(Game game) {
         this.game = game;
     }
 
@@ -31,25 +32,25 @@ public class ShellAPI {
             c = br.readLine();
             Result result = textBasedAPI.evaluate(c);
 
-            if(result.getStatus() == Result.Status.END_OF_GAME) {
+            if (result.getStatus() == Result.Status.END_OF_GAME) {
                 gameLasts = false;
 
                 showEndingInfo();
             } else {
                 p(result);
-                GameImpl.State state = game.state();
+                GameState state = game.getState();
 
                 autoPass();
                 autoSlap();
 
-                p(state.getActivePlayer() + ", moves " + state.getAvailableMoves() + ", coins: " + state.getAvailableCoins());
+                p(state.getActivePlayer() + ", moves " + state.getAvailableMoves() + ", coins: " + state.getSlappedCoins());
             }
         }
     }
 
     private void autoSlap() {
         Result result;
-        if(game.state().getAvailableMoves().contains(Move.SLAP)) {
+        if (game.getState().getAvailableMoves().contains(Move.SLAP)) {
             result = game.slap();
             p(result);
         }
@@ -57,25 +58,25 @@ public class ShellAPI {
 
     private void autoPass() {
         Result result;
-        if(game.state().getAvailableMoves().isEmpty()) {
+        if (game.getState().getAvailableMoves().isEmpty()) {
             result = game.pass();
             p(result);
         }
     }
 
     private void showEndingInfo() {
-        int heads = game.state().getPoints(Side.HEADS);
-        int tails = game.state().getPoints(Side.TAILS);
+        int heads = game.getState().getPoints(Side.HEADS);
+        int tails = game.getState().getPoints(Side.TAILS);
 
         p("HEADS got " + heads);
         p("TAILS got " + tails);
 
-        if(heads == tails) {
+        if (heads == tails) {
             p("Deuce");
         }
-        if(heads > tails) {
+        if (heads > tails) {
             p("HEADS won");
-        }else {
+        } else {
             p("TAILS won");
         }
     }

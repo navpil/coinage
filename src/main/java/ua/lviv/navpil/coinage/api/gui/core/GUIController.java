@@ -1,6 +1,6 @@
 package ua.lviv.navpil.coinage.api.gui.core;
 
-import ua.lviv.navpil.coinage.controller.GameImpl;
+import ua.lviv.navpil.coinage.controller.Game;
 import ua.lviv.navpil.coinage.controller.Result;
 import ua.lviv.navpil.coinage.model.Coin;
 import ua.lviv.navpil.coinage.model.CoinSize;
@@ -15,9 +15,9 @@ public class GUIController implements ItemSelectionListener, MoveAttemptListener
     private final boolean autoSlap;
     private final GUI gui;
     private final SelectedItemsController selectedItemsController = new SelectedItemsController();
-    private final GameImpl game;
+    private final Game game;
 
-    public GUIController(final GUI gui, final GameImpl game, boolean autoPass, boolean autoSlap) {
+    public GUIController(final GUI gui, final Game game, boolean autoPass, boolean autoSlap) {
         this.gui = gui;
         this.game = game;
         this.autoPass = autoPass;
@@ -25,13 +25,12 @@ public class GUIController implements ItemSelectionListener, MoveAttemptListener
         if (autoSlap) {
             game.slap();
         }
-        gui.init(game);
         gui.setSelectionListener(this);
-        gui.setAvailableMoves(game.state().getAvailableMoves());
         gui.setMoveAttemptListener(this);
-
+        gui.updateState(game.getState());
     }
-    public GUIController(final GUI gui, final GameImpl game) {
+
+    public GUIController(final GUI gui, final Game game) {
         this(gui, game, true, true);
     }
 
@@ -44,7 +43,7 @@ public class GUIController implements ItemSelectionListener, MoveAttemptListener
 
     @Override
     public void coinSelected(Coin coin) {
-        if (coin.getSide() == game.state().getActivePlayer()) {
+        if (coin.getSide() == game.getState().getActivePlayer()) {
             selectedItemsController.addCoin(coin);
             gui.setSelectedPositions(selectedItemsController.getPositions());
             gui.setSelectedCoinSize(selectedItemsController.getCoinSize());
@@ -72,7 +71,7 @@ public class GUIController implements ItemSelectionListener, MoveAttemptListener
                 if (positions.size() == 2) {
                     String from = positions.get(0);
                     String to = positions.get(1);
-                    if (game.getBoard().getVertex(positions.get(0)).getCoins().isEmpty()) {
+                    if (game.getState().getVertexes().get(positions.get(0)).getCoins().isEmpty()) {
                         from = positions.get(1);
                         to = positions.get(0);
                     }
@@ -94,10 +93,10 @@ public class GUIController implements ItemSelectionListener, MoveAttemptListener
                 break;
         }
         if (result != null) {
-            if (game.state().getAvailableMoves().isEmpty() && autoPass) {
+            if (game.getState().getAvailableMoves().isEmpty() && autoPass) {
                 game.pass();
             }
-            if (game.state().getAvailableMoves().contains(Move.SLAP) && autoSlap) {
+            if (game.getState().getAvailableMoves().contains(Move.SLAP) && autoSlap) {
                 game.slap();
             }
             if (result.getStatus() == Result.Status.END_OF_GAME) {
@@ -105,8 +104,8 @@ public class GUIController implements ItemSelectionListener, MoveAttemptListener
             }
         }
         selectedItemsController.clear();
-        gui.setAvailableMoves(game.state().getAvailableMoves());
         gui.setSelectedCoinSize(null);
         gui.setSelectedPositions(Collections.<String>emptyList());
+        gui.updateState(game.getState());
     }
 }

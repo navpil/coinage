@@ -1,7 +1,6 @@
 package ua.lviv.navpil.coinage.api.gui.swing;
 
 import ua.lviv.navpil.coinage.api.gui.core.ItemSelectionListener;
-import ua.lviv.navpil.coinage.model.Board;
 import ua.lviv.navpil.coinage.model.Coin;
 import ua.lviv.navpil.coinage.model.Vertex;
 
@@ -22,15 +21,13 @@ class SwingBoard extends JPanel {
     private static final int UNIT = 100;
 
     private final BufferedImage image;
-    private final Board board;
     private final Map<String, XY> vertexLocations = new HashMap<String, XY>();
     private ItemSelectionListener listener;
     private Collection<String> selectedItems = Collections.emptySet();
+    private Collection<Vertex> vertexes;
 
 
-    public SwingBoard(String image, Board board) {
-        this.board = board;
-
+    public SwingBoard(String image) {
         vertexLocations.put("A1", XY.of(30, 10));
         vertexLocations.put("A2", XY.of(195, 10));
         vertexLocations.put("A3", XY.of(360, 10));
@@ -81,11 +78,15 @@ class SwingBoard extends JPanel {
         return x >= upLeft.x && x <= (upLeft.x + UNIT) && y >= upLeft.y && y <= (upLeft.y + UNIT);
     }
 
+    public void updateVertexes(Collection<Vertex> vertexes) {
+        this.vertexes = vertexes;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(image, 0, 0, null);
-        for (Vertex vertex : board.getVertexes()) {
+        for (Vertex vertex : vertexes) {
             XY point = vertexLocations.get(vertex.getName());
             for (Coin coin : vertex.getCoins()) {
                 //todo - should we cache/reuse the SwingCoin for performance? - try it and check with profiler

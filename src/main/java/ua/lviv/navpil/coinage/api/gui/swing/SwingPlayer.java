@@ -1,6 +1,7 @@
 package ua.lviv.navpil.coinage.api.gui.swing;
 
 import ua.lviv.navpil.coinage.controller.GameImpl;
+import ua.lviv.navpil.coinage.controller.GameState;
 import ua.lviv.navpil.coinage.model.Coin;
 import ua.lviv.navpil.coinage.model.CoinSize;
 import ua.lviv.navpil.coinage.model.Player;
@@ -17,11 +18,14 @@ import java.util.TreeMap;
 
 class SwingPlayer extends JPanel {
 
-    private final Player player;
-    private final GameImpl.State state;
+    private GameState state;
+    private final Side side;
 
-    public SwingPlayer(Player player, GameImpl.State state) {
-        this.player = player;
+    public SwingPlayer(Side side) {
+        this.side = side;
+    }
+
+    public void updateState(GameState state) {
         this.state = state;
     }
 
@@ -37,7 +41,7 @@ class SwingPlayer extends JPanel {
 
         g.setColor(getPlayerColor());
         g.setFont(new Font("TimesRoman", Font.BOLD, 30));
-        g.drawString("" + player.getSide(), 10, 25);
+        g.drawString("" + side, 10, 25);
         Map<CoinSize, java.util.List<Coin>> coinNumbers = getCoinNumber();
 
         for (Map.Entry<CoinSize, java.util.List<Coin>> entry : coinNumbers.entrySet()) {
@@ -53,7 +57,7 @@ class SwingPlayer extends JPanel {
 
         g.setColor(getPlayerColor());
         g.setFont(new Font("TimesRoman", Font.BOLD, 30));
-        g.drawString("P: " + state.getPoints(player.getSide()), 10, 400);
+        g.drawString("P: " + state.getPoints(side), 10, 400);
 
 
         g.setColor(oldColor);
@@ -77,7 +81,7 @@ class SwingPlayer extends JPanel {
         for (CoinSize coinSize : CoinSize.values()) {
             m.put(coinSize, new ArrayList<Coin>());
         }
-        for (Coin coin : player.coins()) {
+        for (Coin coin : state.getCoins(side)) {
             m.get(coin.getSize()).add(coin);
         }
         return m;
@@ -89,10 +93,10 @@ class SwingPlayer extends JPanel {
     }
 
     private boolean isActive() {
-        return state.getActivePlayer() == player.getSide();
+        return state.getActivePlayer() == side;
     }
 
     private Color getPlayerColor() {
-        return player.getSide() == Side.HEADS ? Color.WHITE : Color.BLACK;
+        return side == Side.HEADS ? Color.WHITE : Color.BLACK;
     }
 }

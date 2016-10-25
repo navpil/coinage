@@ -3,25 +3,30 @@ package ua.lviv.navpil.coinage.api.gui.swing;
 import ua.lviv.navpil.coinage.api.gui.core.GUI;
 import ua.lviv.navpil.coinage.api.gui.core.ItemSelectionListener;
 import ua.lviv.navpil.coinage.api.gui.core.MoveAttemptListener;
-import ua.lviv.navpil.coinage.controller.GameImpl;
+import ua.lviv.navpil.coinage.controller.GameState;
+import ua.lviv.navpil.coinage.model.Coin;
 import ua.lviv.navpil.coinage.model.CoinSize;
-import ua.lviv.navpil.coinage.model.Move;
 import ua.lviv.navpil.coinage.model.Side;
 
 import javax.swing.*;
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class SwingGUI implements GUI {
 
+    private final SwingPlayer headsPlayer;
+    private final SwingPlayer tailsPlayer;
     private SwingBoard swingBoard;
     private TossCoinsPanel tossCoinsPanel;
     private MovesPanel movesPanel;
-    private GameImpl.State state;
     private JPanel mainPanel;
 
-    public void init(final GameImpl game) {
-        state = game.state();
+    private GameState state;
+
+    public SwingGUI() {
         JFrame frame = new JFrame("Coin Age");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -31,15 +36,18 @@ public class SwingGUI implements GUI {
         final JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 
-        infoPanel.add(new SwingPlayer(game.state().getHeadsPlayer(), game.state()));
-        swingBoard = new SwingBoard("coinage_map_medium.png", game.getBoard());
+        headsPlayer = new SwingPlayer(Side.HEADS);
+        infoPanel.add(headsPlayer);
 
+        swingBoard = new SwingBoard("coinage_map_medium.png");
         infoPanel.add(swingBoard);
-        infoPanel.add(new SwingPlayer(game.state().getTailsPlayer(), game.state()));
+
+        tailsPlayer = new SwingPlayer(Side.TAILS);
+        infoPanel.add(tailsPlayer);
 
         mainPanel.add(infoPanel);
 
-        tossCoinsPanel = new TossCoinsPanel(game.state());
+        tossCoinsPanel = new TossCoinsPanel();
         mainPanel.add(tossCoinsPanel);
 
         movesPanel = new MovesPanel();
@@ -74,8 +82,15 @@ public class SwingGUI implements GUI {
     }
 
     @Override
-    public void setAvailableMoves(Collection<Move> availableMoves) {
-        movesPanel.setCorrectStatesForMoves(availableMoves);
+    public void updateState(GameState state) {
+        this.state = state;
+        movesPanel.setCorrectStatesForMoves(state.getAvailableMoves());
+        swingBoard.updateVertexes(state.getVertexes().values());
+        headsPlayer.updateState(state);
+        tailsPlayer.updateState(state);
+        List<Coin> slappedCoins = new ArrayList<Coin>(state.getSlappedCoins());
+        Collections.sort(slappedCoins);
+        tossCoinsPanel.setSlappedCoins(slappedCoins);
         mainPanel.repaint();
     }
 
@@ -95,7 +110,7 @@ public class SwingGUI implements GUI {
 
         int headsPoints = state.getPoints(Side.HEADS);
         int tailsPoints = state.getPoints(Side.TAILS);
-        if(headsPoints == tailsPoints) {
+        if (headsPoints == tailsPoints) {
             panel.add(new JLabel("Deuce: " + headsPoints + " : " + tailsPoints));
         } else if (headsPoints > tailsPoints) {
             panel.add(new JLabel("HEADS wins: " + headsPoints + " : " + tailsPoints));
