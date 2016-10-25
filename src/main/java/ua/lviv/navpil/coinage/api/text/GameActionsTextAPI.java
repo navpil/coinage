@@ -4,11 +4,11 @@ import ua.lviv.navpil.coinage.model.CoinSize;
 import ua.lviv.navpil.coinage.controller.Game;
 import ua.lviv.navpil.coinage.controller.Result;
 
-public class GameTextAPI implements TextAPI {
+public class GameActionsTextAPI implements TextAPI {
 
     private final Game game;
 
-    public GameTextAPI(Game game) {
+    public GameActionsTextAPI(Game game) {
         this.game = game;
     }
 
@@ -44,6 +44,11 @@ public class GameTextAPI implements TextAPI {
             String[] split = c.split(" ");
             String pos = split[1];
             result = game.capture(pos);
+        } else if (c.equals("undo")) {
+            //todo - this functionality is still not in place. Not the highest priority for now
+            //Will be interesting to implement however - using the Memento or stack of reversible Commands
+            //undo all players moves after the flip
+            //that is: pay, place, move, capture
         }
         return result;
     }
