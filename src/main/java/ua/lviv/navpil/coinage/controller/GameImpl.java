@@ -20,6 +20,7 @@ public class GameImpl implements Game {
     public GameImpl(CoinTosser coinTosser) {
         players = new Players();
         coinsToUse = new ArrayList<Coin>();
+        unusableCoins = new ArrayList<Coin>();
         availableMoves = Arrays.asList(startingMove);
         board = new BoardImpl();
         this.coinTosser = coinTosser;
