@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/navpil/coinage.svg)](https://travis-ci.org/navpil/coinage)
+
 # coinage
 
 Implementation of the Coin Age micro game in Java.
