@@ -144,7 +144,7 @@ public class BoardImpl implements Board {
 
     @Override
     public Collection<Vertex> getVertexes() {
-        return new ArrayList<Vertex>(verteces.values());
+        return Collections.unmodifiableList(new ArrayList<Vertex>(verteces.values()));
     }
 
     @Override

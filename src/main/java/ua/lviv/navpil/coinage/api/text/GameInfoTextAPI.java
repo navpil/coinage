@@ -5,10 +5,9 @@ import ua.lviv.navpil.coinage.controller.GameState;
 import ua.lviv.navpil.coinage.controller.Result;
 import ua.lviv.navpil.coinage.model.Coin;
 import ua.lviv.navpil.coinage.model.Side;
+import ua.lviv.navpil.coinage.util.CoreUtil;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 public class GameInfoTextAPI implements TextAPI {
 
@@ -22,7 +21,7 @@ public class GameInfoTextAPI implements TextAPI {
         Result info = null;
         //Info API
         if (c.equals("coins")) {
-            info = Result.info("Available coins: " + availableCoins());
+            info = Result.info("Available coins: " + getAvailableCoins());
         } else if (c.equals("moves")) {
             info = Result.info("Available moves: " + game.getState().getAvailableMoves());
         } else if (c.equals("active")) {
@@ -37,17 +36,10 @@ public class GameInfoTextAPI implements TextAPI {
         return info;
     }
 
-    private ArrayList<Coin> availableCoins() {
-        ArrayList<Coin> availableCoins = new ArrayList<Coin>();
-        Collection<Coin> slappedCoins = game.getState().getSlappedCoins();
-        for (Coin coin : slappedCoins) {
-            if (coin.getSide() == game.getState().getActivePlayer()) {
-                availableCoins.add(coin);
-            }
-        }
-        Collections.sort(availableCoins);
-        return availableCoins;
+    private List<Coin> getAvailableCoins() {
+        return CoreUtil.getAvailableCoins(game.getState().getSlappedCoins(), game.getState().getActivePlayer());
     }
+
 
 
 }

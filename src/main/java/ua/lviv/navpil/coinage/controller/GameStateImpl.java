@@ -4,6 +4,8 @@ import ua.lviv.navpil.coinage.model.*;
 
 import java.util.*;
 
+import static ua.lviv.navpil.coinage.util.CoreUtil.mapVertexesByName;
+
 /**
  * Immutable state
  */
@@ -25,11 +27,7 @@ class GameStateImpl implements GameState {
         this.tailsCoin = immutableList(tailsCoin);
         this.activePlayer = activePlayer;
         this.slappedCoins = immutableList(slappedCoins);
-        HashMap<String, Vertex> vertexes = new HashMap<String, Vertex>();
-        for (Vertex vertex : board.getVertexes()) {
-            vertexes.put(vertex.getName(), vertex);
-        }
-        this.vertexes = Collections.unmodifiableMap(vertexes);
+        this.vertexes = mapVertexesByName(board.getVertexes());
         this.availableMoves = Collections.unmodifiableSet(new HashSet<Move>(availableMoves));
         this.headsPoints = headsPoints;
         this.tailsPoints = tailsPoints;

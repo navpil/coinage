@@ -10,6 +10,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import static ua.lviv.navpil.coinage.util.CoreUtil.getAvailableCoins;
+
 public class ShellAPI {
 
     private final Game game;
@@ -43,7 +45,8 @@ public class ShellAPI {
                 autoPass();
                 autoSlap();
 
-                p(state.getActivePlayer() + ", moves " + state.getAvailableMoves() + ", coins: " + state.getSlappedCoins());
+                p(state.getActivePlayer() + ", moves " + state.getAvailableMoves() +
+                        ", coins: " + getAvailableCoins(state.getSlappedCoins(), state.getActivePlayer()));
             }
         }
     }
@@ -73,8 +76,7 @@ public class ShellAPI {
 
         if (heads == tails) {
             p("Deuce");
-        }
-        if (heads > tails) {
+        } else if (heads > tails) {
             p("HEADS won");
         } else {
             p("TAILS won");
