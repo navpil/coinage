@@ -1,10 +1,8 @@
 package ua.lviv.navpil.coinage.api.gui.swing;
 
-import ua.lviv.navpil.coinage.controller.GameImpl;
 import ua.lviv.navpil.coinage.controller.GameState;
 import ua.lviv.navpil.coinage.model.Coin;
 import ua.lviv.navpil.coinage.model.CoinSize;
-import ua.lviv.navpil.coinage.model.Player;
 import ua.lviv.navpil.coinage.model.Side;
 
 import javax.swing.JPanel;
@@ -13,6 +11,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -57,7 +56,7 @@ class SwingPlayer extends JPanel {
 
         g.setColor(getPlayerColor());
         g.setFont(new Font("TimesRoman", Font.BOLD, 30));
-        g.drawString("P: " + state.getPoints(side), 10, 400);
+        g.drawString("P: " + (state == null ? 0 : state.getPoints(side)), 10, 400);
 
 
         g.setColor(oldColor);
@@ -77,6 +76,9 @@ class SwingPlayer extends JPanel {
     }
 
     private Map<CoinSize, java.util.List<Coin>> getCoinNumber() {
+        if (state == null) {
+           return Collections.emptyMap();
+        }
         Map<CoinSize, java.util.List<Coin>> m = new TreeMap<CoinSize, java.util.List<Coin>>();
         for (CoinSize coinSize : CoinSize.values()) {
             m.put(coinSize, new ArrayList<Coin>());
@@ -93,7 +95,7 @@ class SwingPlayer extends JPanel {
     }
 
     private boolean isActive() {
-        return state.getActivePlayer() == side;
+        return state != null && state.getActivePlayer() == side;
     }
 
     private Color getPlayerColor() {

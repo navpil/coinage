@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Collections;
 import java.util.List;
 
 class TossCoinsPanel extends JPanel {
@@ -16,7 +17,7 @@ class TossCoinsPanel extends JPanel {
 
     private CoinSize selectedSize;
     private ItemSelectionListener listener;
-    private List<Coin> coins;
+    private List<Coin> coins = Collections.emptyList();
 
     public TossCoinsPanel() {
         addMouseListener(new MouseAdapter() {

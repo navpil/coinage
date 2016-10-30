@@ -24,7 +24,7 @@ class SwingBoard extends JPanel {
     private final Map<String, XY> vertexLocations = new HashMap<String, XY>();
     private ItemSelectionListener listener;
     private Collection<String> selectedItems = Collections.emptySet();
-    private Collection<Vertex> vertexes;
+    private Collection<Vertex> vertexes = Collections.emptyList();
 
 
     public SwingBoard(String image) {
