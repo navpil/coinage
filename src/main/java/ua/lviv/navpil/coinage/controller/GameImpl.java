@@ -31,14 +31,12 @@ public class GameImpl implements Game {
     }
 
     public Result slap() {
-        //done
         if (!availableMoves.contains(Move.SLAP)) {
             return Result.failure("Can't slap");
         } else {
 
             availableMoves = new ArrayList<Move>();
             List<Coin> coinsForMove = players.getActive().getCoinsForMove();
-//            p("Throw coins " + coinsForMove);
 
             coinsToUse = new ArrayList<Coin>();
             unusableCoins = new ArrayList<Coin>();
@@ -48,7 +46,6 @@ public class GameImpl implements Game {
                 System.out.println("Coin " + coin + " fell on side" + side);
                 if (side == players.getActive().getSide()) {
                     coinsToUse.add(coin);
-//                    p(coin);
                 } else {
                     unusableCoins.add(coin.flipped());
                 }
@@ -67,12 +64,11 @@ public class GameImpl implements Game {
                 availableMoves.add(Move.MOVE);
             }
             return Result.success(coinsToUse.toString());
-//            p("You can: " + availableMoves);
         }
     }
 
     public Result pass() {
-        players.next().getSide();
+        players.next();
         availableMoves = Arrays.asList(startingMove);
         coinsToUse = new ArrayList<Coin>();
         return Result.success("Passed");
@@ -104,7 +100,7 @@ public class GameImpl implements Game {
 
     private boolean endOfMove() {
         if (availableMoves.isEmpty()) {
-            players.next().getSide();
+            players.next();
             availableMoves = Arrays.asList(Move.SLAP);
             coinsToUse = new ArrayList<Coin>();
             return true;
