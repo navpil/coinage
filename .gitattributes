@@ -1,0 +1,15 @@
+# Set the default behaviour
+* text=auto
+
+# These need to be converted
+*.java text
+*.xml text
+*.properties text
+
+# These are platfomr specific, don't convert them
+*.bat text eol=crlf
+*.sh text eol=lf
+
+# These are binary
+*.jpg binary
+*.png binary
