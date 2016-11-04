@@ -15,13 +15,12 @@ public class GameImpl implements Game {
     private List<Coin> unusableCoins;
     private List<Move> availableMoves;
     private Board board;
-    private Move startingMove = Move.SLAP;
 
     public GameImpl(CoinTosser coinTosser) {
         players = new Players();
         coinsToUse = new ArrayList<Coin>();
         unusableCoins = new ArrayList<Coin>();
-        availableMoves = Arrays.asList(startingMove);
+        availableMoves = Arrays.asList(Move.SLAP);
         board = new BoardImpl();
         this.coinTosser = coinTosser;
     }
@@ -34,7 +33,6 @@ public class GameImpl implements Game {
         if (!availableMoves.contains(Move.SLAP)) {
             return Result.failure("Can't slap");
         } else {
-
             availableMoves = new ArrayList<Move>();
             List<Coin> coinsForMove = players.getActive().getCoinsForMove();
 
@@ -50,6 +48,7 @@ public class GameImpl implements Game {
                     unusableCoins.add(coin.flipped());
                 }
             }
+            availableMoves.add(Move.PASS);
             if (coinsToUse.size() == 4) {
                 availableMoves.add(Move.PAY);
             }
@@ -68,9 +67,16 @@ public class GameImpl implements Game {
     }
 
     public Result pass() {
-        players.next();
-        availableMoves = Arrays.asList(startingMove);
+        if (!availableMoves.contains(Move.PASS)) {
+            return Result.failure("Can't pass, game was ended");
+        }
         coinsToUse = new ArrayList<Coin>();
+        if (endOfGame()) {
+            availableMoves.clear();
+            return Result.of(Result.Status.END_OF_GAME, "Game ended");
+        }
+        players.next();
+        availableMoves = Arrays.asList(Move.SLAP);
         return Result.success("Passed");
     }
 
@@ -121,7 +127,7 @@ public class GameImpl implements Game {
                 coinsToUse.remove(coin);
                 board.place(coin, position);
                 availableMoves.remove(Move.PLACE);
-                return getCorrectResult("Placed");
+                return Result.success("Placed");
             } else {
                 return Result.failure("Place is not possible");
             }
@@ -135,7 +141,7 @@ public class GameImpl implements Game {
             if(board.canMove(from, to)) {
                 board.move(from, to);
                 availableMoves.remove(Move.MOVE);
-                return getCorrectResult("Moved");
+                return Result.success("Moved");
             } else {
                 return Result.failure("Move is not possible");
             }
@@ -151,7 +157,7 @@ public class GameImpl implements Game {
                 Coin captured = board.capture(pos);
                 players.getActive().add(captured);
                 availableMoves.remove(Move.CAPTURE);
-                return getCorrectResult("Captured");
+                return Result.success("Captured");
             } else {
                 return Result.failure("Capture not possible");
             }
@@ -169,17 +175,6 @@ public class GameImpl implements Game {
 
     private boolean endOfGame() {
         return board.isFull() || players.getActive().coins().isEmpty() || players.getPassive().coins().isEmpty();
-    }
-
-    private Result getCorrectResult(String message) {
-        if (endOfGame()) {
-            availableMoves.clear();
-            startingMove = Move.NONE;
-            return Result.of(Result.Status.END_OF_GAME, message);
-        } else if (endOfMove()) {
-            return Result.endOfMove(message);
-        }
-        return Result.success(message);
     }
 
     @Override

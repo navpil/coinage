@@ -44,7 +44,7 @@ class MovesPanel extends JPanel {
     }
 
     public void setCorrectStatesForMoves(Collection<Move> availableMoves) {
-        pass.setEnabled(!availableMoves.contains(Move.NONE));
+        pass.setEnabled(availableMoves.contains(Move.PASS));
         slap.setEnabled(availableMoves.contains(Move.SLAP));
         move.setEnabled(availableMoves.contains(Move.MOVE));
         pay.setEnabled(availableMoves.contains(Move.PAY));
