@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/navpil/coinage.svg)](https://travis-ci.org/navpil/coinage)
+[![Travis Build Status](https://travis-ci.org/navpil/coinage.svg)](https://travis-ci.org/navpil/coinage)
+[![Circle Build Statis](https://circleci.com/gh/navpil/coinage.png?circle-token=cd618fafb380f450e6ea7969a93288a778070fe9)](https://circleci.com/gh/navpil/coinage)
 
 # coinage
 
