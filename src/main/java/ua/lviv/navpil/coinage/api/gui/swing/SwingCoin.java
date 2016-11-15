@@ -50,9 +50,9 @@ class SwingCoin extends JPanel {
         super.paintComponent(g);
         Color color = g.getColor();
 
-        int radius = RADIUSES.get(coin.getSize());
+        int radius = getRadius();
 
-        g.setColor(coinColor);
+        setBackgroundColor(g);
         g.fillOval(50 - radius, 50 - radius, radius * 2, radius * 2);
 
         Color sideColor = Color.WHITE;
@@ -61,7 +61,7 @@ class SwingCoin extends JPanel {
         }
         g.setColor(sideColor);
 
-        ((Graphics2D) g).setStroke(new BasicStroke(3));
+        ((Graphics2D) g).setStroke(new BasicStroke(2));
         g.drawOval(50 - radius, 50 - radius, radius * 2, radius * 2);
         ((Graphics2D) g).setStroke(new BasicStroke(1));
 
@@ -75,6 +75,20 @@ class SwingCoin extends JPanel {
         g.drawString(coinText, 40, 60);
 
         g.setColor(color);
+    }
+
+    private Integer getRadius() {
+        return radiusFor(coin.getSize());
+    }
+
+    private void setBackgroundColor(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        Color color1 = coinColor;
+        Color color2 = coinColor.darker();
+        GradientPaint gp = new GradientPaint(40, 40, color1, 100, 100, color2);
+        g2d.setPaint(gp);
+//        g.setColor(coinColor);
     }
 
     private String parseToRoman(int value) {
