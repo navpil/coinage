@@ -16,18 +16,18 @@ class SwingCoin extends JPanel {
 
     private final Color coinColor;
 
-    private static final Map<CoinSize, Integer> RADIUSES;
+    private static final Map<CoinSize, Dimensions> DIMENSIONS;
 
     static {
-        HashMap<CoinSize, Integer> m = new HashMap<CoinSize, Integer>();
-        m.put(CoinSize.QUARTER, 50);
-        m.put(CoinSize.NICKEL, 40);
-        m.put(CoinSize.PENNY, 32);
-        m.put(CoinSize.DIME, 26);
-        RADIUSES = Collections.unmodifiableMap(m);
+        HashMap<CoinSize, Dimensions> m = new HashMap<CoinSize, Dimensions>();
+        m.put(CoinSize.QUARTER, new Dimensions(48, 45, -15, -25, 15));
+        m.put(CoinSize.NICKEL,  new Dimensions(40, 40, -13, -28, 14));
+        m.put(CoinSize.PENNY,  new Dimensions(32, 35, -12, -15, 12));
+        m.put(CoinSize.DIME,  new Dimensions(26, 30, -9, -6, 10));
+        DIMENSIONS = Collections.unmodifiableMap(m);
     }
 
-    public SwingCoin(Coin coin) {
+    SwingCoin(Coin coin) {
         this.coin = coin;
         switch (coin.getSize()) {
             case QUARTER:
@@ -48,6 +48,8 @@ class SwingCoin extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D)g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,    RenderingHints.VALUE_ANTIALIAS_ON);
         Color color = g.getColor();
 
         int radius = getRadius();
@@ -61,9 +63,9 @@ class SwingCoin extends JPanel {
         }
         g.setColor(sideColor);
 
-        ((Graphics2D) g).setStroke(new BasicStroke(2));
+        g2d.setStroke(new BasicStroke(2));
         g.drawOval(50 - radius, 50 - radius, radius * 2, radius * 2);
-        ((Graphics2D) g).setStroke(new BasicStroke(1));
+        g2d.setStroke(new BasicStroke(1));
 
         String coinText = "" + coin.getSize().getValue();
         g.setColor(Color.WHITE);
@@ -71,10 +73,27 @@ class SwingCoin extends JPanel {
             coinText = parseToRoman(coin.getSize().getValue());
             g.setColor(Color.BLACK);
         }
-        g.setFont(new Font("TimesRoman", Font.BOLD, 30));
-        g.drawString(coinText, 40, 60);
+        g.setFont(new Font("TimesRoman", Font.BOLD, getCoinFontSize()));
+
+        g.drawString(coinText, 50 + getXOffset(), 50 + getYOffset());
 
         g.setColor(color);
+    }
+
+    private int getYOffset() {
+        return DIMENSIONS.get(coin.getSize()).yOffset;
+    }
+
+    private int getXOffset() {
+        if (coin.getSide() == Side.HEADS) {
+            return DIMENSIONS.get(coin.getSize()).xOffset;
+        } else {
+            return DIMENSIONS.get(coin.getSize()).xRomanOffset;
+        }
+    }
+
+    private int getCoinFontSize() {
+        return DIMENSIONS.get(coin.getSize()).fontSize;
     }
 
     private Integer getRadius() {
@@ -84,11 +103,10 @@ class SwingCoin extends JPanel {
     private void setBackgroundColor(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        Color color1 = coinColor;
-        Color color2 = coinColor.darker();
-        GradientPaint gp = new GradientPaint(40, 40, color1, 100, 100, color2);
+        GradientPaint gp = new GradientPaint(
+                40, 40, coinColor,
+                100, 100, coinColor.darker());
         g2d.setPaint(gp);
-//        g.setColor(coinColor);
     }
 
     private String parseToRoman(int value) {
@@ -106,8 +124,23 @@ class SwingCoin extends JPanel {
     }
 
     public static int radiusFor(CoinSize coinSize) {
-        Integer radius = RADIUSES.get(coinSize);
-        return radius == null ? 0 : radius;
+        return DIMENSIONS.get(coinSize).radius;
+    }
+
+    private static class Dimensions {
+        final int radius;
+        final int fontSize;
+        final int xOffset;
+        final int xRomanOffset;
+        final int yOffset;
+
+        private Dimensions(int radius, int fontSize, int xOffset, int xRomanOffset, int yOffset) {
+            this.radius = radius;
+            this.fontSize = fontSize;
+            this.xOffset = xOffset;
+            this.xRomanOffset = xRomanOffset;
+            this.yOffset = yOffset;
+        }
     }
 
 }
