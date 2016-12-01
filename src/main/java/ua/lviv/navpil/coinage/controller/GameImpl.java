@@ -37,7 +37,6 @@ public class GameImpl implements Game {
 
             coinsToUse = new ArrayList<>();
             unusableCoins = new ArrayList<>();
-            System.out.println("Coins to move: " + coinsForMove);
             for (Coin coin : coinsForMove) {
                 Side side = coinTosser.toss(coin);
                 if (side == players.getActive().getSide()) {
