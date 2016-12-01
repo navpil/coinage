@@ -4,6 +4,7 @@ import ua.lviv.navpil.coinage.model.Coin;
 import ua.lviv.navpil.coinage.model.CoinSize;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 class SelectedItemsController {
 
@@ -56,22 +57,18 @@ class SelectedItemsController {
     }
 
     public CoinSize getCoinSize() {
-        for (SelectedItem selectedItem : selectedItems) {
-            if (selectedItem.getCoin() != null) {
-                return selectedItem.getCoin().getSize();
-            }
-        }
-        return null;
+        return selectedItems.stream()
+                .filter((item) -> item.getCoin() != null)
+                .findFirst()
+                .map((item) -> item.getCoin().getSize())
+                .orElse(null);
     }
 
     public List<String> getPositions() {
-        java.util.List<String> result = new ArrayList<String>();
-        for (SelectedItem selectedItem : selectedItems) {
-            if (selectedItem.getPosition() != null) {
-                result.add(selectedItem.getPosition());
-            }
-        }
-        return result;
+        return selectedItems.stream()
+                .filter(selectedItem -> selectedItem.getPosition() != null)
+                .map(SelectedItem::getPosition)
+                .collect(Collectors.toList());
     }
 
     public void clear() {

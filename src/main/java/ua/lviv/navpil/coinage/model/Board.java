@@ -3,23 +3,23 @@ package ua.lviv.navpil.coinage.model;
 import java.util.Collection;
 
 public interface Board {
-    public boolean canPlace(Coin coin, String position);
+    boolean canPlace(Coin coin, String position);
 
-    public void place(Coin coin, String position);
+    void place(Coin coin, String position);
 
-    public boolean canMove(String from, String to);
+    boolean canMove(String from, String to);
 
-    public void move(String from, String to);
+    void move(String from, String to);
 
-    public boolean canCapture(String position);
+    boolean canCapture(String position);
 
-    public Coin capture(String position);
+    Coin capture(String position);
 
-    public Vertex getVertex(String position);
+    Vertex getVertex(String position);
 
-    public Collection<Vertex> getVertexes();
+    Collection<Vertex> getVertexes();
 
-    public boolean isFull();
+    boolean isFull();
 
-    public int calculate(Side side);
+    int calculate(Side side);
 }

@@ -71,7 +71,7 @@ public class GUIController implements ItemSelectionListener, MoveAttemptListener
                 if (positions.size() == 2) {
                     String from = positions.get(0);
                     String to = positions.get(1);
-                    if (game.getState().getVertexes().get(positions.get(0)).getCoins().isEmpty()) {
+                    if (isEmptyVertex(from)) {
                         from = positions.get(1);
                         to = positions.get(0);
                     }
@@ -107,5 +107,9 @@ public class GUIController implements ItemSelectionListener, MoveAttemptListener
         gui.setSelectedCoinSize(null);
         gui.setSelectedPositions(Collections.<String>emptyList());
         gui.updateState(game.getState());
+    }
+
+    private boolean isEmptyVertex(String from) {
+        return game.getState().getVertexes().get(from).getCoins().isEmpty();
     }
 }

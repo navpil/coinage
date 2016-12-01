@@ -79,9 +79,9 @@ class SwingPlayer extends JPanel {
         if (state == null) {
            return Collections.emptyMap();
         }
-        Map<CoinSize, java.util.List<Coin>> m = new TreeMap<CoinSize, java.util.List<Coin>>();
+        Map<CoinSize, java.util.List<Coin>> m = new TreeMap<>();
         for (CoinSize coinSize : CoinSize.values()) {
-            m.put(coinSize, new ArrayList<Coin>());
+            m.put(coinSize, new ArrayList<>());
         }
         for (Coin coin : state.getCoins(side)) {
             m.get(coin.getSize()).add(coin);

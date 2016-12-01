@@ -47,9 +47,10 @@ public class PlayerTest {
     @Test
     public void testCoins() throws Exception {
         assertAllSides(heads.coins(), Side.HEADS);
-        for (Coin coin : tails.coins()) {
-            Assert.assertEquals(Side.TAILS, coin.getSide());
-        }
+        assertAllSides(tails.coins(), Side.TAILS);
+        Assert.assertEquals(10, heads.coins().size());
+        Assert.assertEquals(10, tails.coins().size());
+
     }
 
     private void assertAllSides(List<Coin> coins, Side side) {
@@ -65,21 +66,20 @@ public class PlayerTest {
     }
 
     private void removeAllCoins(Player player) {
-        for (Coin coin : player.coins()) {
-            player.remove(coin);
-        }
+        player.coins().forEach(player::remove);
     }
 
     private void removeAllCoins(Player player, CoinSize size) {
-        for (Coin coin : player.coins()) {
-            if (coin.getSize() == size)
-                player.remove(coin);
-        }
+        player.coins().stream()
+                .filter(coin -> coin.getSize() == size)
+                .forEach(player::remove);
     }
 
     @Test
     public void testAdd() throws Exception {
         heads.add(new Coin(CoinSize.DIME, Side.TAILS));
         assertAllSides(heads.coins(), Side.HEADS);
+        Assert.assertEquals(11, heads.coins().size());
+
     }
 }

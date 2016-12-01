@@ -3,9 +3,9 @@ package ua.lviv.navpil.coinage.model;
 import java.util.*;
 
 public class BoardImpl implements Board {
-    private final Map<String, VertexImpl> verteces = new TreeMap<String, VertexImpl>();
-    private final Map<String, Collection<VertexImpl>> regions = new TreeMap<String, Collection<VertexImpl>>();
-    private final static Set<String> possiblePositions = new HashSet<String>(Arrays.asList("A1", "A2", "A3", "B1", "B2", "B3", "B4", "C1", "C2", "C3"));
+    private final Map<String, VertexImpl> verteces = new TreeMap<>();
+    private final Map<String, Collection<VertexImpl>> regions = new TreeMap<>();
+    private final static Set<String> possiblePositions = new HashSet<>(Arrays.asList("A1", "A2", "A3", "B1", "B2", "B3", "B4", "C1", "C2", "C3"));
 
     public BoardImpl() {
         for (String string : possiblePositions) {
@@ -44,7 +44,7 @@ public class BoardImpl implements Board {
     }
 
     private void createRegion(String regionCode, String... parts) {
-        regions.put(regionCode, new HashSet<VertexImpl>());
+        regions.put(regionCode, new HashSet<>());
         for (String part : parts) {
             VertexImpl vertex = vertex(part);
             vertex.setRegion(regionCode);
