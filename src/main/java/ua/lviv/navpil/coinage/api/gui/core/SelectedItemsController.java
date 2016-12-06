@@ -13,7 +13,7 @@ class SelectedItemsController {
     public void addPosition(String position) {
         SelectedItem selectedItem = new SelectedItem(position, null);
 
-        if(selectedItems.contains(selectedItem)) {
+        if (selectedItems.contains(selectedItem)) {
             //deselect
             selectedItems.remove(selectedItem);
         } else {
@@ -29,14 +29,14 @@ class SelectedItemsController {
         SelectedItem selectedItem = new SelectedItem(null, coin);
 
         //deselect
-        if(selectedItems.contains(selectedItem)) {
+        if (selectedItems.contains(selectedItem)) {
             selectedItems.remove(selectedItem);
             return;
         }
 
         //remove any coins that are in the selection
         SelectedItem c = getSelectedCoinItem();
-        if(c != null) {
+        if (c != null) {
             selectedItems.remove(c);
         }
 

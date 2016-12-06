@@ -1,13 +1,9 @@
 package ua.lviv.navpil.coinage.api.text;
 
 import ua.lviv.navpil.coinage.controller.Game;
-import ua.lviv.navpil.coinage.controller.GameState;
 import ua.lviv.navpil.coinage.controller.Result;
-import ua.lviv.navpil.coinage.model.Coin;
-import ua.lviv.navpil.coinage.model.Side;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 

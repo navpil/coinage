@@ -6,7 +6,6 @@ import ua.lviv.navpil.coinage.model.Side;
 import ua.lviv.navpil.coinage.model.Vertex;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 public interface GameState {

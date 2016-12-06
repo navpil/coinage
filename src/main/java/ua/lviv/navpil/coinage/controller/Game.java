@@ -4,18 +4,18 @@ import ua.lviv.navpil.coinage.model.*;
 
 public interface Game {
 
-    public Result slap();
+    Result slap();
 
-    public Result pass();
+    Result pass();
 
-    public Result pay(CoinSize coinSize);
+    Result pay(CoinSize coinSize);
 
-    public Result place(CoinSize coinSize, String position);
+    Result place(CoinSize coinSize, String position);
 
-    public Result move(String from, String to);
+    Result move(String from, String to);
 
-    public Result capture(String pos);
+    Result capture(String pos);
 
-    public GameState getState();
+    GameState getState();
 
 }
