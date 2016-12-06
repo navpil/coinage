@@ -13,7 +13,7 @@ class Players {
     private final Map<Side, Player> map = new HashMap<Side, Player>();
     private int currentlyActive = 0;
 
-    public Players() {
+    Players() {
         add(new Player(Side.HEADS));
         add(new Player(Side.TAILS));
     }
@@ -23,11 +23,11 @@ class Players {
         map.put(player.getSide(), player);
     }
 
-    public Player getActive() {
+    Player getActive() {
         return players.get(currentlyActive);
     }
 
-    public Player next() {
+    Player next() {
         currentlyActive++;
         if(currentlyActive == players.size()) {
             currentlyActive = 0;
@@ -35,11 +35,11 @@ class Players {
         return players.get(currentlyActive);
     }
 
-    public Player getPassive() {
+    Player getPassive() {
         return players.get((currentlyActive + 1) % 2);
     }
 
-    public Player getPlayer(Side side) {
+    Player getPlayer(Side side) {
         return map.get(side);
     }
 

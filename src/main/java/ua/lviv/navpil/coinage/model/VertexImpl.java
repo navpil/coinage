@@ -5,17 +5,17 @@ import java.util.*;
 class VertexImpl implements Vertex {
 
     private final String name;
-    private final Set<String> adjacent = new HashSet<String>();
-    private final List<Coin> coins = new ArrayList<Coin>();
+    private final Set<String> adjacent = new HashSet<>();
+    private final List<Coin> coins = new ArrayList<>();
     private String region;
 
-    public VertexImpl(String name) {
+    VertexImpl(String name) {
         this.name = name;
     }
 
     @Override
     public List<Coin> getCoins() {
-        return Collections.unmodifiableList(new ArrayList<Coin>(coins));
+        return Collections.unmodifiableList(new ArrayList<>(coins));
     }
 
     @Override

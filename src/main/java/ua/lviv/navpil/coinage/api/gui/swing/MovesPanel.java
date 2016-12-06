@@ -19,7 +19,7 @@ class MovesPanel extends JPanel {
     private final JButton place;
     private final JButton pass;
 
-    private MoveAttemptListener moveButtonClickedListener = new NoOpMoveButtonClickedListener();
+    private MoveAttemptListener moveButtonClickedListener = (move) -> {};
 
     public MovesPanel() {
         pass = createButton("Pass", Move.PASS);
@@ -39,7 +39,7 @@ class MovesPanel extends JPanel {
 
     private JButton createButton(String label, final Move move) {
         JButton button = new JButton(label);
-        button.addActionListener(new MoveButtonClickedActionListener(move));
+        button.addActionListener((e) -> moveButtonClickedListener.moveAttempted(move));
         return button;
     }
 
@@ -54,29 +54,9 @@ class MovesPanel extends JPanel {
 
     public void setMoveButtonClickedListener(MoveAttemptListener moveButtonClickedListener) {
         if (moveButtonClickedListener == null) {
-            this.moveButtonClickedListener = new NoOpMoveButtonClickedListener();
+            this.moveButtonClickedListener = (move) -> {};
         } else {
             this.moveButtonClickedListener = moveButtonClickedListener;
-        }
-    }
-
-    public static class NoOpMoveButtonClickedListener implements MoveAttemptListener {
-        @Override
-        public void moveAttempted(Move move) {
-        }
-    }
-
-    private class MoveButtonClickedActionListener implements ActionListener {
-
-        private final Move move;
-
-        private MoveButtonClickedActionListener(Move move) {
-            this.move = move;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            moveButtonClickedListener.moveAttempted(move);
         }
     }
 }

@@ -88,7 +88,7 @@ public class SwingGUI implements GUI {
         swingBoard.updateVertexes(state.getVertexes().values());
         headsPlayer.updateState(state);
         tailsPlayer.updateState(state);
-        List<Coin> slappedCoins = new ArrayList<Coin>(state.getSlappedCoins());
+        List<Coin> slappedCoins = new ArrayList<>(state.getSlappedCoins());
         Collections.sort(slappedCoins);
         tossCoinsPanel.setSlappedCoins(slappedCoins);
         mainPanel.repaint();

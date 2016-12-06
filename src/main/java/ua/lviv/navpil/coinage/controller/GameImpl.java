@@ -2,10 +2,9 @@ package ua.lviv.navpil.coinage.controller;
 
 import ua.lviv.navpil.coinage.model.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GameImpl implements Game {
 
@@ -18,9 +17,9 @@ public class GameImpl implements Game {
 
     public GameImpl(CoinTosser coinTosser) {
         players = new Players();
-        coinsToUse = new ArrayList<Coin>();
-        unusableCoins = new ArrayList<Coin>();
-        availableMoves = Arrays.asList(Move.SLAP);
+        coinsToUse = new ArrayList<>();
+        unusableCoins = new ArrayList<>();
+        availableMoves = Collections.singletonList(Move.SLAP);
         board = new BoardImpl();
         this.coinTosser = coinTosser;
     }
@@ -33,15 +32,13 @@ public class GameImpl implements Game {
         if (!availableMoves.contains(Move.SLAP)) {
             return Result.failure("Can't slap");
         } else {
-            availableMoves = new ArrayList<Move>();
+            availableMoves = new ArrayList<>();
             List<Coin> coinsForMove = players.getActive().getCoinsForMove();
 
-            coinsToUse = new ArrayList<Coin>();
-            unusableCoins = new ArrayList<Coin>();
-            System.out.println("Coins to move: " + coinsForMove);
+            coinsToUse = new ArrayList<>();
+            unusableCoins = new ArrayList<>();
             for (Coin coin : coinsForMove) {
                 Side side = coinTosser.toss(coin);
-                System.out.println("Coin " + coin + " fell on side" + side);
                 if (side == players.getActive().getSide()) {
                     coinsToUse.add(coin);
                 } else {
@@ -70,13 +67,13 @@ public class GameImpl implements Game {
         if (!availableMoves.contains(Move.PASS)) {
             return Result.failure("Can't pass, game was ended");
         }
-        coinsToUse = new ArrayList<Coin>();
+        coinsToUse = new ArrayList<>();
         if (endOfGame()) {
             availableMoves.clear();
             return Result.of(Result.Status.END_OF_GAME, "Game ended");
         }
         players.next();
-        availableMoves = Arrays.asList(Move.SLAP);
+        availableMoves = Collections.singletonList(Move.SLAP);
         return Result.success("Passed");
     }
 
@@ -102,16 +99,6 @@ public class GameImpl implements Game {
         if (o == null) {
             throw new NullPointerException();
         }
-    }
-
-    private boolean endOfMove() {
-        if (availableMoves.isEmpty()) {
-            players.next();
-            availableMoves = Arrays.asList(Move.SLAP);
-            coinsToUse = new ArrayList<Coin>();
-            return true;
-        }
-        return false;
     }
 
     public Result place(CoinSize coinSize, String position) {
@@ -183,20 +170,12 @@ public class GameImpl implements Game {
                 players.getPlayer(Side.HEADS).coins(),
                 players.getPlayer(Side.TAILS).coins(),
                 players.getActive().getSide(),
-                combine(coinsToUse, unusableCoins),
+                Stream.concat(coinsToUse.stream(), unusableCoins.stream()).collect(Collectors.toList()),
                 board,
                 availableMoves,
                 getPoints(Side.HEADS),
                 getPoints(Side.TAILS)
         );
-    }
-
-    private <T> Collection<T> combine(Collection<T> ... collections) {
-        ArrayList<T> result = new ArrayList<T>();
-        for (Collection<T> collection : collections) {
-            result.addAll(collection);
-        }
-        return result;
     }
 
     private int getPoints(Side side) {

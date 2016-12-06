@@ -1,6 +1,7 @@
 package ua.lviv.navpil.coinage.model;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Player {
 
@@ -9,7 +10,7 @@ public class Player {
 
     public Player(Side side) {
         this.side = side;
-        coins = new TreeMap<CoinSize, List<Coin>>();
+        coins = new TreeMap<>();
 
         addCoins(CoinSize.DIME, 4);
         addCoins(CoinSize.PENNY, 3);
@@ -18,7 +19,7 @@ public class Player {
     }
 
     private void addCoins(CoinSize type, int count) {
-        ArrayList<Coin> c = new ArrayList<Coin>();
+        ArrayList<Coin> c = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             c.add(new Coin(type, side));
         }
@@ -26,12 +27,10 @@ public class Player {
     }
 
     public List<Coin> getCoinsForMove() {
-        List<Coin> result = new ArrayList<Coin>();
-        for (List<Coin> list : coins.values()) {
-            if (!list.isEmpty()) {
-                result.add(list.get(0));
-            }
-        }
+        List<Coin> result = coins.values().stream()
+                .filter(list -> !list.isEmpty())
+                .map(list -> list.get(0))
+                .collect(Collectors.toList());
         if(result.isEmpty()) {
             throw new IllegalStateException("Game should have ended by now");
         }
@@ -43,11 +42,13 @@ public class Player {
     }
 
     public List<Coin> coins () {
-        List<Coin> allCoins = new ArrayList<Coin>();
-        for (List<Coin> coinList : coins.values()) {
-            allCoins.addAll(coinList);
-        }
-        return allCoins;
+        return coins.values().stream().reduce(
+                new ArrayList<>(),
+                (allCoins, c) -> {
+                    allCoins.addAll(c);
+                    return allCoins;
+                }
+        );
     }
 
     public void remove(Coin coin) {

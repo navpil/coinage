@@ -21,7 +21,7 @@ class SwingBoard extends JPanel {
     private static final int UNIT = 100;
 
     private final BufferedImage image;
-    private final Map<String, XY> vertexLocations = new HashMap<String, XY>();
+    private final Map<String, XY> vertexLocations = new HashMap<>();
     private ItemSelectionListener listener;
     private Collection<String> selectedItems = Collections.emptySet();
     private Collection<Vertex> vertexes = Collections.emptyList();
@@ -47,20 +47,15 @@ class SwingBoard extends JPanel {
 
         addMouseListener(new MouseAdapter() {
 
-            //todo: mouse click does not react on a "lazy click" - when a person clicks and moves a moouse slightly
             @Override
             public void mouseClicked(MouseEvent e) {
                 int x = e.getX();
                 int y = e.getY();
 
-                for (Map.Entry<String, XY> stringXYEntry : vertexLocations.entrySet()) {
-                    if (isWithin(x, y, stringXYEntry.getValue())) {
-                        if (listener != null) {
-                            listener.positionSelected(stringXYEntry.getKey());
-                        }
-                        break;
-                    }
-                }
+                vertexLocations.entrySet().stream()
+                        .filter((entry) -> isWithin(x, y, entry.getValue()))
+                        .findFirst()
+                        .ifPresent((entity) -> listener.positionSelected(entity.getKey()));
             }
         });
     }
